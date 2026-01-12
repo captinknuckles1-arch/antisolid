@@ -1,7 +1,7 @@
 {
-  "title": "Violent Edition I",
   "slug": "violent-01",
+  "title": "Violent Edition I",
   "theme": "violent",
-  "published": "2026-01-12",
-  "archived": true
+  "year": 2026,
+  "locked": true
 }
