@@ -1,1 +1,1 @@
-{"entity": "DAL-BRG-453", "name": "Bridge Steps", "vault_path": "/public/vault/manifests/", "assets": ["STARBUCKS.pdf", "TESLA.pdf"]}
+{"entity": "TEST-EAK-001", "name": "Solid Test Run", "vault_path": "./", "status": "VERIFIED"}
