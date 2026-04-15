@@ -1,0 +1,7 @@
+{
+  "system": "SOLID_OS_v79",
+  "entities": 44218,
+  "ledger_ref": "index.csv",
+  "eak_protocol": "active",
+  "billing_status": "synced"
+}
