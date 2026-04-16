@@ -1,12 +1,11 @@
 {
     "proprietor": "Solid LP",
     "version": "v.100_PROD",
-    "legal_notice": "Confidential - ISO 20022 Protected",
     "entities": [
         {
             "id": "DAL-BRG-453",
             "value": "2,700,000,000.00",
-            "status": "LOCAL NODE - VERIFIED"
+            "status": "VERIFIED"
         },
         {
             "id": "MACRO-SWEEP-44K",
@@ -16,7 +15,7 @@
         {
             "id": "AMZ-G5-992",
             "value": "SETTLEMENT_REQUIRED",
-            "status": "PENDING REGISTRATION"
+            "status": "PENDING"
         }
     ]
 }
