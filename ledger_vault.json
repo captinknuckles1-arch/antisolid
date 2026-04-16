@@ -1,0 +1,7 @@
+{
+  "total_entities": 44218,
+  "nodes": {
+    "DAL-BRG-453": {"val": "210M", "status": "REVOKED_UNPAID"},
+    "SWEEP-2.7B": {"val": "2.7B", "status": "LOCKED_BY_PROPRIETOR"}
+  }
+}
