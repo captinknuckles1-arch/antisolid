@@ -1,20 +1,11 @@
-const PROPRIETOR = "Solid LP (Lance Pullen)";
-const STATUS_MANIFEST = {
-    "DAL-BRG-453": { 
-        name: "Solid Integrations LLC", 
-        val: "210,000,000", 
-        status: "ACCESS_REVOKED", 
-        reason: "Non-Payment / Unauthorized IP Usage" 
-    },
-    "AMZ-088": { status: "LOCKED_BY_INVENTOR" },
-    "APL-774": { status: "LOCKED_BY_INVENTOR" }
-};
+const VAULT = require('./ledger_vault.json');
 
 window.checkEAK = (key) => {
-    const entry = STATUS_MANIFEST[key.toUpperCase()];
-    if (entry) {
-        alert("CRITICAL: " + entry.reason + "\nContact " + PROPRIETOR + " for Settlement.");
-        return entry;
+    const node = VAULT.high_value_nodes[key.toUpperCase()];
+    if (node) {
+        console.log("SOLID_OS: INTERNAL VALIDATION SUCCESSFUL.");
+        alert("STATUS: " + node.status + "\nVALUE: $" + node.value);
+        return node;
     }
-    return { status: "NODE_NOT_FOUND", error: "403 Forbidden" };
+    return { status: "403_FORBIDDEN", msg: "Entity not in local vault." };
 };

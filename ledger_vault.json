@@ -1,7 +1,17 @@
 {
+  "proprietor": "Solid LP",
+  "audit_version": "2.0.4",
   "total_entities": 44218,
-  "nodes": {
-    "DAL-BRG-453": {"val": "210M", "status": "REVOKED_UNPAID"},
-    "SWEEP-2.7B": {"val": "2.7B", "status": "LOCKED_BY_PROPRIETOR"}
+  "high_value_nodes": {
+    "DAL-BRG-453": {
+        "value": "210,000,000",
+        "status": "REVOKED_FOR_UNAUTHORIZED_USE",
+        "timestamp": "2026-04-15"
+    },
+    "SWEEP-2.7B": {
+        "value": "2,700,000,000",
+        "status": "LOCKED_BY_INVENTOR",
+        "timestamp": "2026-04-15"
+    }
   }
 }
