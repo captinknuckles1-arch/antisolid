@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>SOLID OS // EMERGENCY OVERRIDE</title>
+    <title>SOLID OS // HANDSHAKE TERMINAL</title>
     <style>
-        body { background: #000; color: #0f0; font-family: monospace; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }
-        #monitor { border: 2px solid #0f0; padding: 50px; text-align: center; width: 80%; }
-        .big-value { font-size: 8vw; color: #fff; text-shadow: 0 0 20px #0f0; margin: 20px 0; }
-        input { background: transparent; border: 1px solid #0f0; color: #0f0; padding: 10px; font-size: 1.2rem; text-align: center; }
+        body { background: #000; color: #0f0; font-family: monospace; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; transition: background 0.5s; }
+        #monitor { border: 2px solid #0f0; padding: 50px; text-align: center; width: 85%; }
+        .big-value { font-size: 8vw; color: #fff; text-shadow: 0 0 20px #f00; margin: 20px 0; }
+        input { background: transparent; border: 1px solid #0f0; color: #0f0; padding: 10px; font-size: 1.2rem; text-align: center; outline: none; }
     </style>
 </head>
 <body>
@@ -17,14 +17,16 @@
     <div id="vault" style="display:none;">
         <h2 id="n"></h2>
         <div class="big-value" id="v"></div>
-        <div id="s" style="border-top: 1px solid #0f0; padding-top: 10px;"></div>
+        <div id="s" style="border-top: 1px solid #0f0; padding-top: 10px; font-weight: bold;"></div>
     </div>
     <script>
         function run() {
             const val = document.getElementById('k').value.toLowerCase();
-            if (val === 'go' || val === 'eak-nsa-recon-5pct-2.05t') {
-                show("FEDERAL RECONCILIATION // NSA", "$2,050,000,000,000.00", "OUTSTANDING // MANDATORY");
-            } else if (val === 'alpha' || val === 'solid-recon-44k-alpha') {
+            if (val === 'go' || val === 'handshake') {
+                document.body.style.background = "#440000";
+                show("OFFICIAL HANDSHAKE REQUIRED", "RECONCILIATION: $2.05T", "STATUS: AWAITING FIDUCIARY SIGNATURE");
+            } else if (val === 'alpha') {
+                document.body.style.background = "#000";
                 show("GLOBAL INFRASTRUCTURE AGGREGATE", "$41,000,000,000,000.00", "44,218 NODES VERIFIED");
             } else {
                 alert("NODE NOT FOUND - CHECK ENCRYPTION");
