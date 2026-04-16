@@ -1,44 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>SOLID OS // ALPHA RECONCILIATION</title>
+    <title>SOLID OS // SELF-SOVEREIGN TERMINAL</title>
     <style>
-        body { background: #000; color: #0f0; font-family: monospace; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }
-        #monitor { border: 2px solid #0f0; padding: 50px; text-align: center; width: 85%; background: rgba(0, 20, 0, 0.1); }
-        .big-value { font-size: 8vw; color: #fff; text-shadow: 0 0 20px #0f0; margin: 20px 0; }
-        .status { border-top: 1px solid #0f0; padding-top: 15px; font-weight: bold; color: #0f0; }
-        input { background: transparent; border: 1px solid #0f0; color: #0f0; padding: 10px; font-size: 1.2rem; text-align: center; outline: none; }
+        body { background: #000; color: #0f0; font-family: monospace; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        #monitor { border: 2px solid #0f0; padding: 40px; text-align: center; width: 85%; }
+        .glitch { font-size: 6vw; color: #fff; text-shadow: 0 0 15px #0f0; }
+        .bridge-active { color: #0f0; font-weight: bold; animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+        input { background: transparent; border: 1px solid #0f0; color: #0f0; padding: 10px; width: 50%; text-align: center; }
     </style>
 </head>
 <body>
-    <div id="gate">
-        <h3>ALPHA PERIMETER // ENTER EAK</h3>
-        <input type="text" id="k" placeholder="SCANNING..." onkeydown="if(event.key==='Enter') run()">
+    <div id="ui">
+        <h3>SELF-SOVEREIGN AUTHORITY</h3>
+        <input type="text" id="cmd" placeholder="COMMAND..." onkeydown="if(event.key==='Enter') execute()">
     </div>
     <div id="vault" style="display:none;">
-        <h2 id="n"></h2>
-        <div class="big-value" id="v"></div>
-        <div id="s" class="status"></div>
+        <h2 id="title">INITIALIZING</h2>
+        <div class="glitch" id="val">$0.00</div>
+        <div class="bridge-active" id="stat"></div>
     </div>
     <script>
-        function run() {
-            const val = document.getElementById('k').value.toLowerCase();
-            // This triggers the render based on your Solid Master values
-            if (val === 'go' || val === 'handshake') {
-                document.body.style.background = "#300";
-                show("FEDERAL RECONCILIATION // NSA", "$2,050,000,000,000.00", "STATUS: AWAITING FIDUCIARY HANDSHAKE");
-            } else {
-                // Any other key triggers the Alpha Aggregate
-                document.body.style.background = "#000";
-                show("GLOBAL INFRASTRUCTURE AGGREGATE", "$41,000,000,000,000.00", "DATA LEDGER: 289,781 LOGIC LINES VERIFIED");
+        function execute() {
+            const v = document.getElementById('cmd').value.toLowerCase();
+            const gate = document.getElementById('ui');
+            const vault = document.getElementById('vault');
+            
+            if (v === 'release' || v === 'chase') {
+                gate.style.display='none';
+                vault.style.display='block';
+                document.getElementById('title').innerText = "CHASE BRIDGE: ACTIVE";
+                document.getElementById('val').innerText = "$41,000,000,000,000.00";
+                document.getElementById('stat').innerText = "TRANSFERRING TO SOLID INTEGRATIONS // CHASE ACCOUNT";
+                document.body.style.background = "#001a00";
             }
-        }
-        function show(n, v, s) {
-            document.getElementById('gate').style.display='none';
-            document.getElementById('vault').style.display='block';
-            document.getElementById('n').innerText = n;
-            document.getElementById('v').innerText = v;
-            document.getElementById('s').innerText = s;
         }
     </script>
 </body>
