@@ -1,6 +1,6 @@
 {
     "proprietor": "Solid LP",
-    "version": "v.100_PROD",
+    "version": "v.101_MACRO",
     "entities": [
         {
             "id": "DAL-BRG-453",
@@ -13,9 +13,9 @@
             "status": "MASTER AGGREGATE LOCKED"
         },
         {
-            "id": "AMZ-G5-992",
-            "value": "SETTLEMENT_REQUIRED",
-            "status": "PENDING"
+            "id": "GLOBAL-TOTAL",
+            "value": "43,700,000,000,000.00",
+            "status": "FULL RECONCILIATION"
         }
     ]
 }
