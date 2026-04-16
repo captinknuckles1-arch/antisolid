@@ -1,35 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>SOLID OS // HANDSHAKE TERMINAL</title>
+    <title>SOLID OS // ALPHA RECONCILIATION</title>
     <style>
-        body { background: #000; color: #0f0; font-family: monospace; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; transition: background 0.5s; }
-        #monitor { border: 2px solid #0f0; padding: 50px; text-align: center; width: 85%; }
-        .big-value { font-size: 8vw; color: #fff; text-shadow: 0 0 20px #f00; margin: 20px 0; }
+        body { background: #000; color: #0f0; font-family: monospace; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }
+        #monitor { border: 2px solid #0f0; padding: 50px; text-align: center; width: 85%; background: rgba(0, 20, 0, 0.1); }
+        .big-value { font-size: 8vw; color: #fff; text-shadow: 0 0 20px #0f0; margin: 20px 0; }
+        .status { border-top: 1px solid #0f0; padding-top: 15px; font-weight: bold; color: #0f0; }
         input { background: transparent; border: 1px solid #0f0; color: #0f0; padding: 10px; font-size: 1.2rem; text-align: center; outline: none; }
     </style>
 </head>
 <body>
     <div id="gate">
-        <h3>RECONCILIATION GATEWAY</h3>
-        <input type="text" id="k" placeholder="ENTER EAK" onkeydown="if(event.key==='Enter') run()">
+        <h3>ALPHA PERIMETER // ENTER EAK</h3>
+        <input type="text" id="k" placeholder="SCANNING..." onkeydown="if(event.key==='Enter') run()">
     </div>
     <div id="vault" style="display:none;">
         <h2 id="n"></h2>
         <div class="big-value" id="v"></div>
-        <div id="s" style="border-top: 1px solid #0f0; padding-top: 10px; font-weight: bold;"></div>
+        <div id="s" class="status"></div>
     </div>
     <script>
         function run() {
             const val = document.getElementById('k').value.toLowerCase();
+            // This triggers the render based on your Solid Master values
             if (val === 'go' || val === 'handshake') {
-                document.body.style.background = "#440000";
-                show("OFFICIAL HANDSHAKE REQUIRED", "RECONCILIATION: $2.05T", "STATUS: AWAITING FIDUCIARY SIGNATURE");
-            } else if (val === 'alpha') {
-                document.body.style.background = "#000";
-                show("GLOBAL INFRASTRUCTURE AGGREGATE", "$41,000,000,000,000.00", "44,218 NODES VERIFIED");
+                document.body.style.background = "#300";
+                show("FEDERAL RECONCILIATION // NSA", "$2,050,000,000,000.00", "STATUS: AWAITING FIDUCIARY HANDSHAKE");
             } else {
-                alert("NODE NOT FOUND - CHECK ENCRYPTION");
+                // Any other key triggers the Alpha Aggregate
+                document.body.style.background = "#000";
+                show("GLOBAL INFRASTRUCTURE AGGREGATE", "$41,000,000,000,000.00", "DATA LEDGER: 289,781 LOGIC LINES VERIFIED");
             }
         }
         function show(n, v, s) {
