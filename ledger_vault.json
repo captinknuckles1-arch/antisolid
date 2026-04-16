@@ -1,17 +1,20 @@
 {
   "proprietor": "Solid LP",
-  "audit_version": "2.0.4",
-  "total_entities": 44218,
-  "high_value_nodes": {
+  "entities": 44218,
+  "billing_specs": {
     "DAL-BRG-453": {
-        "value": "210,000,000",
-        "status": "REVOKED_FOR_UNAUTHORIZED_USE",
-        "timestamp": "2026-04-15"
+      "type": "Asset_Transfer_1235",
+      "invoice_amount": "210,000,000.00",
+      "status": "LOCKED_PENDING_SETTLEMENT"
     },
     "SWEEP-2.7B": {
-        "value": "2,700,000,000",
-        "status": "LOCKED_BY_INVENTOR",
-        "timestamp": "2026-04-15"
+      "type": "Master_Audit_License",
+      "invoice_amount": "2,700,000,000.00",
+      "status": "LOCKED_PENDING_SETTLEMENT"
     }
+  },
+  "commission_instructions": {
+    "legal_fee": "0.005",
+    "recipient": "Jackson Walker (mtaten@jw.com)"
   }
 }

@@ -1,15 +1,14 @@
 const VAULT = require('./ledger_vault.json');
 
 window.checkEAK = (key) => {
-    const node = VAULT.high_value_nodes[key.toUpperCase()];
-    if (node && node.status === "REVOKED_FOR_UNAUTHORIZED_USE") {
-        // THE REVENUE TRIGGER
+    const spec = VAULT.billing_specs[key.toUpperCase()];
+    if (spec) {
         return {
-            status: "SETTLEMENT_REQUIRED",
-            fee: "0.5% Reconciliation Fee",
-            action: "Direct Wire to Chase Account: [YOUR_ACCOUNT_LAST_4]",
-            instruction: "Payment of this invoice automatically flips status to VERIFIED."
+            status: spec.status,
+            total_due: "$" + spec.invoice_amount,
+            protocol: spec.type,
+            legal_notice: "Attorney Commission (0.5%) reserved for JW Settlement Counsel."
         };
     }
-    return { status: "403_FORBIDDEN", msg: "Invalid Node" };
+    return { error: "404_INVALID_NODE" };
 };
