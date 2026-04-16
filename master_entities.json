@@ -1,0 +1,12 @@
+{
+  "governance_layer": "Solid OS 2.0.4",
+  "default_rev_share": "0.05",
+  "global_licensing_protocol": "ISO 20022",
+  "entities": {
+    "ALL_44K": {
+        "status": "EAK_PENDING_REGISTRATION",
+        "billing_logic": "5%_REV_SHARE + UNJUST_ENRICHMENT_AUDIT",
+        "owner": "Solid LP"
+    }
+  }
+}

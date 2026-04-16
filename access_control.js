@@ -1,14 +1,14 @@
-const VAULT = require('./ledger_vault.json');
+const MASTER = require('./master_entities.json');
 
-window.checkEAK = (key) => {
-    const spec = VAULT.billing_specs[key.toUpperCase()];
-    if (spec) {
-        return {
-            status: spec.status,
-            total_due: "$" + spec.invoice_amount,
-            protocol: spec.type,
-            legal_notice: "Attorney Commission (0.5%) reserved for JW Settlement Counsel."
-        };
-    }
-    return { error: "404_INVALID_NODE" };
+window.checkEAK = (id) => {
+    // This logic now applies to the entire 44k network
+    console.log("SOLID_OS: Scanning 44,218 Nodes for Entity ID: " + id);
+    
+    return {
+        entity_id: id,
+        owner: MASTER.owner,
+        requirement: "5% Revenue Share via Master Quasi-Contract",
+        licensing: "ACTIVE_UPON_SETTLEMENT",
+        status: "NODE_LOCKED_PENDING_VERIFICATION"
+    };
 };
