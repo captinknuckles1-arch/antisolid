@@ -1,29 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>SOLID OS - GATEWAY</title>
+    <meta charset="UTF-8">
+    <title>SOLID OS // v.79</title>
     <style>
-        body { background: #000; color: #0f0; font-family: monospace; text-align: center; padding: 50px; }
-        input { padding: 10px; width: 300px; background: #111; color: #0f0; border: 1px solid #0f0; }
-        button { padding: 10px 20px; background: #0f0; color: #000; border: none; cursor: pointer; }
+        body { background-color: #000; color: #00ff00; font-family: 'Courier New', monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .auth-container { border: 2px solid #00ff00; padding: 40px; text-align: center; box-shadow: 0 0 20px #004400; background: #050505; width: 450px; }
+        .header { font-size: 14px; letter-spacing: 2px; margin-bottom: 30px; color: #008800; }
+        input { background: none; border: 1px solid #00ff00; color: #00ff00; padding: 15px; width: 80%; text-align: center; font-size: 18px; margin-bottom: 20px; outline: none; }
+        button { background: #333; color: #fff; border: 1px solid #555; padding: 15px 30px; font-size: 16px; cursor: pointer; width: 88%; font-weight: bold; text-transform: uppercase; }
+        button:hover { background: #444; border-color: #00ff00; color: #00ff00; }
     </style>
 </head>
 <body>
-    <h1>SOLID OS - VALIDATION PORTAL</h1>
-    <p>ENTER EAK FOR SETTLEMENT STATUS</p>
-    <input type="text" id="eakInput" placeholder="Enter EAK (e.g., AMZ-G5-992)">
-    <button onclick="runTest()">VALIDATE</button>
+    <div class="auth-container">
+        <div class="header">SOLID_INTEGRATIONS // MASTER_NODE_AUTH</div>
+        <input type="text" id="eakInput" placeholder="ENTER EAK" spellcheck="false">
+        <br>
+        <button onclick="decryptLedger()">DECRYPT MASTER LEDGER</button>
+    </div>
 
     <script>
-        // THE DATA & LOGIC INJECTED DIRECTLY
-        const MANIFEST = {
+        // THE VERIFIED 44K LOGIC (NO SMOKE)
+        const STATUS_MANIFEST = {
             "AMZ-G5-992": { "reason": "UNPAID_GOVERNANCE_FEES", "share": "5%_REV_SHARE" },
-            "DAL-BRG-453": { "reason": "UNAUTHORIZED_USAGE", "value": "210,000,000.00" }
+            "DAL-BRG-453": { "reason": "UNAUTHORIZED_IN_HOUSE_USAGE", "value": "210,000,000.00" }
         };
 
-        function runTest() {
-            const key = document.getElementById('eakInput').value.toUpperCase();
-            const entry = MANIFEST[key];
+        function decryptLedger() {
+            const key = document.getElementById('eakInput').value.toUpperCase().trim();
+            const entry = STATUS_MANIFEST[key];
+
             if (entry) {
                 alert("NODE FOUND!\nSTATUS: " + entry.reason + "\nPROPRIETOR: Solid LP");
             } else {
