@@ -2,41 +2,47 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOLID OS // v.102</title>
+    <title>SOLID OS // FINAL VERSION</title>
     <style>
-        body { background: #000; color: #0f0; font-family: monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }
-        #vault { border: 2px solid #0f0; padding: 40px; width: 95vw; text-align: center; box-shadow: 0 0 20px #040; }
-        .amount { font-size: 6.5vw; white-space: nowrap; margin: 20px 0; letter-spacing: -2px; }
-        .status { font-size: 1.5rem; color: #0a0; border-top: 1px solid #040; padding-top: 10px; }
-        input { background: #000; border: 1px solid #0f0; color: #0f0; padding: 10px; font-family: monospace; text-align: center; font-size: 1.2rem; outline: none; }
+        body { background: #000; color: #0f0; font-family: monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        #vault { border: 2px solid #0f0; padding: 40px; width: 90vw; text-align: center; }
+        .amount { font-size: 7vw; white-space: nowrap; margin: 20px 0; }
+        input { background: #000; border: 1px solid #0f0; color: #0f0; padding: 15px; font-size: 1.5rem; text-align: center; width: 60%; }
     </style>
 </head>
 <body>
     <div id="gate">
-        <h2>ENTER ENTITY ACCESS KEY (EAK)</h2>
+        <h2>RECONCILIATION GATEWAY // ENTER EAK</h2>
         <input type="text" id="eakInput" onkeydown="if(event.key==='Enter') verify()">
     </div>
     <div id="vault" style="display:none;">
-        <div style="font-size: 1.2rem; color: #0a0;">TOTAL AGGREGATE RECONCILIATION</div>
+        <h3 id="entityName"></h3>
         <div class="amount" id="displayValue"></div>
-        <div class="status" id="displayStatus"></div>
+        <div id="displayStatus" style="color: #0a0; border-top: 1px solid #040; padding-top: 10px;"></div>
     </div>
 
     <script>
-        function verify() {
-            const val = document.getElementById('eakInput').value;
-            if (val === "MACRO-SWEEP-44K") {
-                render("$41,000,000,000,000.00", "MASTER AGGREGATE LOCKED");
-            } else if (val === "DAL-BRG-453") {
-                render("$2,700,000,000.00", "LOCAL NODE VERIFIED");
+        async function verify() {
+            const input = document.getElementById('eakInput').value;
+            // This pulls directly from your local 44k data sheet
+            const response = await fetch('./database_payload.json');
+            const data = await response.json();
+            
+            // SEARCH LOGIC: This finds the EAK in your 44k entity list
+            const record = data.entities.find(e => e.id === input);
+
+            if (record) {
+                render(record.name, record.value, record.status);
+            } else if (input === "EAK-NSA-RECON-5PCT-2.05T") {
+                render("NSA RECONCILIATION", "$2,050,000,000,000.00", "OUTSTANDING // MANDATORY");
             } else {
-                alert("ACCESS DENIED: ENTITY NOT FOUND");
+                alert("EAK NOT FOUND IN 44K LEDGER");
             }
         }
-        function render(amt, status) {
+        function render(name, amt, status) {
             document.getElementById('gate').style.display = 'none';
             document.getElementById('vault').style.display = 'block';
+            document.getElementById('entityName').innerText = name;
             document.getElementById('displayValue').innerText = amt;
             document.getElementById('displayStatus').innerText = status;
         }
