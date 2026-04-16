@@ -5,18 +5,18 @@
     "entities": [
         {
             "id": "DAL-BRG-453",
-            "value": "210,000,000.00",
-            "status": "REVOKED"
+            "value": "2,700,000,000.00",
+            "status": "LOCAL NODE - VERIFIED"
         },
         {
-            "id": "SWEEP-2.7B",
-            "value": "2,700,000,000.00",
-            "status": "LOCKED"
+            "id": "MACRO-SWEEP-44K",
+            "value": "41,000,000,000,000.00",
+            "status": "MASTER AGGREGATE LOCKED"
         },
         {
             "id": "AMZ-G5-992",
             "value": "SETTLEMENT_REQUIRED",
-            "status": "PENDING"
+            "status": "PENDING REGISTRATION"
         }
     ]
 }
