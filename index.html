@@ -2,64 +2,43 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SOLID OS // GATEWAY v.100</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOLID OS // v.102</title>
     <style>
-        body { background:#000; color:#0f0; font-family: 'Courier New', monospace; margin:0; }
-        .wrapper { display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; }
-        .auth-box { border: 1px solid #0f0; padding: 40px; background:#050505; text-align:center; width: 95vw; max-width: none; }
-        input { background:none; border:1px solid #0f0; color:#0f0; padding:12px; width:80%; margin-bottom:20px; text-align:center; }
-        button { background:#0f0; color:#000; border:none; padding:12px 25px; cursor:pointer; font-weight:bold; width:88%; }
-        .footer { margin-top:20px; font-size:10px; }
-        .footer a { color:#008800; text-decoration:none; margin: 0 10px; }
-        #portal-ui { display:none; padding:50px; }
-        .data-card { border:1px solid #0f0; padding:20px; max-width:500px; margin:auto; }
+        body { background: #000; color: #0f0; font-family: monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }
+        #vault { border: 2px solid #0f0; padding: 40px; width: 95vw; text-align: center; box-shadow: 0 0 20px #040; }
+        .amount { font-size: 6.5vw; white-space: nowrap; margin: 20px 0; letter-spacing: -2px; }
+        .status { font-size: 1.5rem; color: #0a0; border-top: 1px solid #040; padding-top: 10px; }
+        input { background: #000; border: 1px solid #0f0; color: #0f0; padding: 10px; font-family: monospace; text-align: center; font-size: 1.2rem; outline: none; }
     </style>
 </head>
 <body>
-    <div id="auth-screen" class="wrapper">
-        <div class="auth-box">
-            <div style="font-size:12px; margin-bottom:20px;">SOLID_INTEGRATIONS // AUTH_GATEWAY</div>
-            <input type="text" id="eakInput" placeholder="ENTER ENTITY ACCESS KEY">
-            <button onclick="validateEAK()">VALIDATE ACCESS</button>
-            <div class="footer">
-                <a href="terms.html" target="_blank">TERMS</a>
-                <a href="privacy.html" target="_blank">PRIVACY</a>
-            </div>
-        </div>
+    <div id="gate">
+        <h2>ENTER ENTITY ACCESS KEY (EAK)</h2>
+        <input type="text" id="eakInput" onkeydown="if(event.key==='Enter') verify()">
     </div>
-
-    <div id="portal-ui">
-        <div class="data-card">
-            <h3>ENTITY VALIDATION SUCCESSFUL</h3>
-            <hr border="0" style="border-bottom:1px solid #0f0">
-            <p id="entityName"></p>
-            <p id="entityValue" style="font-size:24px; color:#fff;"></p>
-            <p id="entityStatus" style="color:yellow;"></p>
-            <button onclick="location.reload()" style="background:#333; color:#fff; width:100%;">LOGOUT</button>
-        </div>
+    <div id="vault" style="display:none;">
+        <div style="font-size: 1.2rem; color: #0a0;">TOTAL AGGREGATE RECONCILIATION</div>
+        <div class="amount" id="displayValue"></div>
+        <div class="status" id="displayStatus"></div>
     </div>
 
     <script>
-        async function validateEAK() {
-            const input = document.getElementById('eakInput').value.toUpperCase().trim();
-            
-            // In a real DB setup, this fetches from your payload.
-            // For this live verification, we point to the nodes you just created in Python.
-            const vault = {
-                "DAL-BRG-453": { "name": "BRIDGE RECONCILIATION", "val": ",000,000.00", "status": "REVOKED - SETTLEMENT PENDING" },
-                "SWEEP-2.7B": { "name": "GLOBAL AUDIT SWEEP", "val": ",700,000,000.00", "status": "LOCKED BY PROPRIETOR" }
-            };
-
-            const node = vault[input];
-            if (node) {
-                document.getElementById('auth-screen').style.display = 'none';
-                document.getElementById('portal-ui').style.display = 'block';
-                document.getElementById('entityName').innerText = "NODE: " + node.name;
-                document.getElementById('entityValue').innerText = node.val;
-                document.getElementById('entityStatus').innerText = "STATUS: " + node.status;
+        function verify() {
+            const val = document.getElementById('eakInput').value;
+            if (val === "MACRO-SWEEP-44K") {
+                render("$41,000,000,000,000.00", "MASTER AGGREGATE LOCKED");
+            } else if (val === "DAL-BRG-453") {
+                render("$2,700,000,000.00", "LOCAL NODE VERIFIED");
             } else {
-                alert("ACCESS DENIED: INVALID EAK OR PENDING REGISTRATION");
+                alert("ACCESS DENIED: ENTITY NOT FOUND");
             }
+        }
+        function render(amt, status) {
+            document.getElementById('gate').style.display = 'none';
+            document.getElementById('vault').style.display = 'block';
+            document.getElementById('displayValue').innerText = amt;
+            document.getElementById('displayStatus').innerText = status;
         }
     </script>
 </body>
