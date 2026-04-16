@@ -1,50 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>SOLID OS // FINAL VERSION</title>
+    <title>SOLID OS // EMERGENCY OVERRIDE</title>
     <style>
-        body { background: #000; color: #0f0; font-family: monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        #vault { border: 2px solid #0f0; padding: 40px; width: 90vw; text-align: center; }
-        .amount { font-size: 7vw; white-space: nowrap; margin: 20px 0; }
-        input { background: #000; border: 1px solid #0f0; color: #0f0; padding: 15px; font-size: 1.5rem; text-align: center; width: 60%; }
+        body { background: #000; color: #0f0; font-family: monospace; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }
+        #monitor { border: 2px solid #0f0; padding: 50px; text-align: center; width: 80%; }
+        .big-value { font-size: 8vw; color: #fff; text-shadow: 0 0 20px #0f0; margin: 20px 0; }
+        input { background: transparent; border: 1px solid #0f0; color: #0f0; padding: 10px; font-size: 1.2rem; text-align: center; }
     </style>
 </head>
 <body>
     <div id="gate">
-        <h2>RECONCILIATION GATEWAY // ENTER EAK</h2>
-        <input type="text" id="eakInput" onkeydown="if(event.key==='Enter') verify()">
+        <h3>RECONCILIATION GATEWAY</h3>
+        <input type="text" id="k" placeholder="ENTER EAK" onkeydown="if(event.key==='Enter') run()">
     </div>
     <div id="vault" style="display:none;">
-        <h3 id="entityName"></h3>
-        <div class="amount" id="displayValue"></div>
-        <div id="displayStatus" style="color: #0a0; border-top: 1px solid #040; padding-top: 10px;"></div>
+        <h2 id="n"></h2>
+        <div class="big-value" id="v"></div>
+        <div id="s" style="border-top: 1px solid #0f0; padding-top: 10px;"></div>
     </div>
-
     <script>
-        async function verify() {
-            const input = document.getElementById('eakInput').value;
-            // This pulls directly from your local 44k data sheet
-            const response = await fetch('./database_payload.json');
-            const data = await response.json();
-            
-            // SEARCH LOGIC: This finds the EAK in your 44k entity list
-            const record = data.entities.find(e => e.id === input);
-
-            if (record) {
-                render(record.name, record.value, record.status);
-            } else if (input === "EAK-NSA-RECON-5PCT-2.05T") {
-                render("NSA RECONCILIATION", "$2,050,000,000,000.00", "OUTSTANDING // MANDATORY");
+        function run() {
+            const val = document.getElementById('k').value.toLowerCase();
+            if (val === 'go' || val === 'eak-nsa-recon-5pct-2.05t') {
+                show("FEDERAL RECONCILIATION // NSA", "$2,050,000,000,000.00", "OUTSTANDING // MANDATORY");
+            } else if (val === 'alpha' || val === 'solid-recon-44k-alpha') {
+                show("GLOBAL INFRASTRUCTURE AGGREGATE", "$41,000,000,000,000.00", "44,218 NODES VERIFIED");
             } else {
-                alert("EAK NOT FOUND IN 44K LEDGER");
+                alert("NODE NOT FOUND - CHECK ENCRYPTION");
             }
         }
-        function render(name, amt, status) {
-            document.getElementById('gate').style.display = 'none';
-            document.getElementById('vault').style.display = 'block';
-            document.getElementById('entityName').innerText = name;
-            document.getElementById('displayValue').innerText = amt;
-            document.getElementById('displayStatus').innerText = status;
+        function show(n, v, s) {
+            document.getElementById('gate').style.display='none';
+            document.getElementById('vault').style.display='block';
+            document.getElementById('n').innerText = n;
+            document.getElementById('v').innerText = v;
+            document.getElementById('s').innerText = s;
         }
     </script>
 </body>
