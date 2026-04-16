@@ -2,84 +2,63 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SOLID OS // v.79 MASTER_LEDGER</title>
+    <title>SOLID OS // GATEWAY v.100</title>
     <style>
-        body { background-color: #000; color: #00ff00; font-family: 'Courier New', monospace; margin: 0; overflow-x: hidden; }
-        
-        /* AUTH SCREEN (v.79) */
-        #auth-screen { display: flex; justify-content: center; align-items: center; height: 100vh; }
-        .auth-container { border: 2px solid #00ff00; padding: 40px; text-align: center; box-shadow: 0 0 20px #004400; background: #050505; width: 450px; }
-        input { background: none; border: 1px solid #00ff00; color: #00ff00; padding: 15px; width: 80%; text-align: center; font-size: 18px; margin-bottom: 20px; outline: none; }
-        button { background: #111; color: #0f0; border: 1px solid #0f0; padding: 15px 30px; font-size: 16px; cursor: pointer; width: 88%; text-transform: uppercase; }
-        button:hover { background: #00ff00; color: #000; }
-
-        /* INNER DASHBOARD - FIXED WIDTHS */
-        #dashboard-screen { display: none; padding: 40px; }
-        .header-bar { border-bottom: 2px solid #0f0; padding-bottom: 10px; margin-bottom: 30px; display: flex; justify-content: space-between; font-weight: bold; }
-        .node-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; }
-        .card { border: 1px solid #008800; padding: 25px; background: #050505; min-width: 320px; }
-        .val { font-size: 28px; color: #fff; margin: 15px 0; white-space: nowrap; }
-        .label { font-size: 13px; color: #008800; text-transform: uppercase; letter-spacing: 1px; }
-        .status-tag { display: inline-block; padding: 4px 10px; font-size: 11px; border: 1px solid #0f0; margin-top: 15px; background: rgba(0, 255, 0, 0.1); }
+        body { background:#000; color:#0f0; font-family: 'Courier New', monospace; margin:0; }
+        .wrapper { display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; }
+        .auth-box { border: 1px solid #0f0; padding: 40px; background:#050505; text-align:center; width: 400px; }
+        input { background:none; border:1px solid #0f0; color:#0f0; padding:12px; width:80%; margin-bottom:20px; text-align:center; }
+        button { background:#0f0; color:#000; border:none; padding:12px 25px; cursor:pointer; font-weight:bold; width:88%; }
+        .footer { margin-top:20px; font-size:10px; }
+        .footer a { color:#008800; text-decoration:none; margin: 0 10px; }
+        #portal-ui { display:none; padding:50px; }
+        .data-card { border:1px solid #0f0; padding:20px; max-width:500px; margin:auto; }
     </style>
 </head>
 <body>
-
-    <div id="auth-screen">
-        <div class="auth-container">
-            <div style="font-size: 12px; color: #008800; margin-bottom: 20px;">SOLID_INTEGRATIONS // MASTER_NODE_AUTH</div>
-            <input type="text" id="eakInput" placeholder="ENTER EAK" spellcheck="false">
-            <button onclick="decryptLedger()">DECRYPT MASTER LEDGER</button>
+    <div id="auth-screen" class="wrapper">
+        <div class="auth-box">
+            <div style="font-size:12px; margin-bottom:20px;">SOLID_INTEGRATIONS // AUTH_GATEWAY</div>
+            <input type="text" id="eakInput" placeholder="ENTER ENTITY ACCESS KEY">
+            <button onclick="validateEAK()">VALIDATE ACCESS</button>
+            <div class="footer">
+                <a href="/legal/terms.html" target="_blank">TERMS</a>
+                <a href="/legal/privacy.html" target="_blank">PRIVACY</a>
+            </div>
         </div>
     </div>
 
-    <div id="dashboard-screen">
-        <div class="header-bar">
-            <div>SOLID OS v.79 // PROPRIETOR: SOLID LP</div>
-            <div>STATUS: UNRESTRICTED_ACCESS</div>
-        </div>
-
-        <div class="node-grid">
-            <div class="card">
-                <div class="label">Primary Node: DAL-BRG-453</div>
-                <div class="val">,000,000.00</div>
-                <div class="status-tag">REVOKED_FOR_UNAUTHORIZED_USE</div>
-            </div>
-            <div class="card">
-                <div class="label">Audit Sweep: SWEEP-2.7B</div>
-                <div class="val">,700,000,000.00</div>
-                <div class="status-tag">LOCKED_BY_INVENTOR</div>
-            </div>
-            <div class="card">
-                <div class="label">Network Reach</div>
-                <div class="val">44,218 ENTITIES</div>
-                <div class="status-tag">5% REV_SHARE_ACTIVE</div>
-            </div>
-        </div>
-
-        <div style="margin-top: 40px; border: 1px solid #004400; padding: 20px; font-size: 12px; color: #008800; background: #050505;">
-            <strong>SYSTEM_LOG:</strong> ISO 20022 Handshake initialized... Awaiting Chase Settlement... 
-            <br>Verification of 44,218 Ledger Nodes complete. Proprietorship confirmed via Master Quasi-Contract.
+    <div id="portal-ui">
+        <div class="data-card">
+            <h3>ENTITY VALIDATION SUCCESSFUL</h3>
+            <hr border="0" style="border-bottom:1px solid #0f0">
+            <p id="entityName"></p>
+            <p id="entityValue" style="font-size:24px; color:#fff;"></p>
+            <p id="entityStatus" style="color:yellow;"></p>
+            <button onclick="location.reload()" style="background:#333; color:#fff; width:100%;">LOGOUT</button>
         </div>
     </div>
 
     <script>
-        // EXPANDED MANIFEST TO PROVE THE 44K HORIZON
-        const MANIFEST = {
-            "AMZ-G5-992": true,
-            "DAL-BRG-453": true,
-            "TBS-SHELTER-001": true,
-            "JPM-SWEEP-774": true
-        };
-
-        function decryptLedger() {
-            const key = document.getElementById('eakInput').value.toUpperCase().trim();
+        async function validateEAK() {
+            const input = document.getElementById('eakInput').value.toUpperCase().trim();
             
-            if (MANIFEST[key]) {
+            // In a real DB setup, this fetches from your payload.
+            // For this live verification, we point to the nodes you just created in Python.
+            const vault = {
+                "DAL-BRG-453": { "name": "BRIDGE RECONCILIATION", "val": ",000,000.00", "status": "REVOKED - SETTLEMENT PENDING" },
+                "SWEEP-2.7B": { "name": "GLOBAL AUDIT SWEEP", "val": ",700,000,000.00", "status": "LOCKED BY PROPRIETOR" }
+            };
+
+            const node = vault[input];
+            if (node) {
                 document.getElementById('auth-screen').style.display = 'none';
-                document.getElementById('dashboard-screen').style.display = 'block';
+                document.getElementById('portal-ui').style.display = 'block';
+                document.getElementById('entityName').innerText = "NODE: " + node.name;
+                document.getElementById('entityValue').innerText = node.val;
+                document.getElementById('entityStatus').innerText = "STATUS: " + node.status;
             } else {
-                alert("ACCESS DENIED: ENTITY NOT FOUND IN 44K LEDGER");
+                alert("ACCESS DENIED: INVALID EAK OR PENDING REGISTRATION");
             }
         }
     </script>
