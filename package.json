@@ -7,6 +7,7 @@
     "publish": "next build && git add . && git commit -m 'publish' && git push"
   },
   "dependencies": {
+    "@tailwindcss/postcss": "^4.2.2",
     "framer-motion": "^12.26.1",
     "marked": "^11.1.0",
     "next": "^16.1.1",
@@ -16,6 +17,9 @@
   "devDependencies": {
     "@types/node": "25.0.6",
     "@types/react": "19.2.8",
+    "autoprefixer": "^10.4.27",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^4.2.2",
     "typescript": "5.9.3"
   }
 }

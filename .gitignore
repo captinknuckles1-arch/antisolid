@@ -39,3 +39,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Solid Integrations Sovereign Security Exclusions
+.env*
+solid_signature.py
+sovereign_check.py
+SOLID_AI_MASTER_ENGINE_v8.txt
+*.pem
+*.key
+*EIN*
+*Tax*
