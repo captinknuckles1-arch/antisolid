@@ -1,6 +1,7 @@
 #!/bin/bash
-# Safe cover normalization script preventing self-copy loops
-if [ -d "../content/covers" ] && [ -d "public/covers" ]; then
-  rsync -av --exclude='covers' ../content/covers/ public/covers/ || true
+# Completely safe cover normalization script
+echo "=== NORMALIZING COVERS ==="
+if [ -d "../content/covers" ] && [ "$(realpath ../content/covers)" != "$(realpath public/covers)" ]; then
+  cp -rn ../content/covers/* public/covers/ 2>/dev/null || true
 fi
 echo "=== COVER NORMALIZATION COMPLETE ==="
