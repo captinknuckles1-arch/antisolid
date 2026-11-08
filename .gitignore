@@ -49,3 +49,5 @@ SOLID_AI_MASTER_ENGINE_v8.txt
 *.key
 *EIN*
 *Tax*
+.env
+moc_live.log

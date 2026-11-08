@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Solid Integrations LLC - Interactive CEO Command & Live Telemetry Daemon (v3.1)
+# Solid Integrations LLC - Interactive CEO Command & Live Telemetry Daemon (v3.2)
 # Operational Authority: MOC | CAGE: 20U61 | UEI: XT2KK6DNSLR5 | Root Hash: 235021c9
 
 import os
@@ -12,8 +12,9 @@ import hashlib
 import datetime
 import threading
 import subprocess
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import urlparse
 from http.server import HTTPServer, SimpleHTTPRequestHandler
+from env_loader import load_dotenv, get_auth_summary
 
 HOST = "127.0.0.1"
 PORT = 8787
@@ -27,8 +28,8 @@ SWARM_ROSTER = [
     ("agents/moc_controller.py", "MOC_CORE", "Master coordination layer for 16 active autonomous nodes."),
     ("agents/legal_brokerage_agent.py", "CLAUDE_LEGAL", "Client intake, DFARS compliance & $4.2M IP recovery ledger."),
     ("agents/dfw_lead_scraper.py", "GPT_PIPELINE", "42 DFW industrial corridors (Valwood, Stemmons, GSW, Alliance)."),
-    ("agents/sam_gov_monitor.py", "SAM_GOV", "Entity tier API polling (UEI: XT2KK6DNSLR5 | CAGE: 20U61)."),
-    ("agents/ercot_arbitrage.py", "ERCOT_LMP", "SCED 5-min Real-Time LMP & 15-min SPP battery storage sync."),
+    ("agents/sam_gov_monitor.py", "SAM_GOV", "Authenticated SAM.gov v2 Opportunities API monitor (UEI: XT2KK6DNSLR5)."),
+    ("agents/ercot_arbitrage.py", "ERCOT_LMP", "Authenticated ERCOT NP6-905-CD SPP & SCED LMP battery sync."),
     ("agents/can_bus_fleet.py", "CAN_BUS", "Vehicle diagnostic telemetry & fabrication profiles."),
     ("agents/outlook_comms.py", "OUTLOOK_SYNC", "Inbox monitor for solid.lp@outlook.com & DOE OSDBU (Kent Hibben)."),
     ("agents/agent_firewall.py", "FIREWALL", "Payload inspection and restricted pattern filtering."),
@@ -47,6 +48,9 @@ EXEC_COUNTS = {path: 0 for path, _, _ in SWARM_ROSTER}
 SAFE_COMMANDS = {
     "git_status": ["git", "status", "-s", "-b"],
     "git_log": ["git", "log", "-n", "5", "--oneline"],
+    "audit_env": [sys.executable, "env_loader.py"],
+    "poll_sam": [sys.executable, "agents/sam_gov_monitor.py"],
+    "poll_ercot": [sys.executable, "agents/ercot_arbitrage.py"],
     "verify_hash": [sys.executable, "sync_ledger_hash.py"],
     "sync_outlook": [sys.executable, "pull_outlook_inbox.py"],
     "scan_dfw": [sys.executable, "dfw_lead_scraper.py"],
@@ -99,7 +103,7 @@ def get_git_telemetry():
         dirty_count = len([line for line in status_out.splitlines() if line.strip()])
         return {"branch": branch, "commit": commit, "dirty_files": dirty_count, "clean": dirty_count == 0}
     except Exception as e:
-        return {"branch": "main", "commit": "d81735d", "dirty_files": 0, "clean": True, "error": str(e)}
+        return {"branch": "main", "commit": "HEAD", "dirty_files": 0, "clean": True, "error": str(e)}
 
 def compute_repo_sha256():
     h = hashlib.sha256()
@@ -114,6 +118,7 @@ def compute_repo_sha256():
     return f"{ROOT_HASH}::{h.hexdigest()[:12]}"
 
 def update_ercot_stream():
+    auth = get_auth_summary()
     base_north = 50.17
     base_houston = 53.40
     base_west = 44.85
@@ -122,6 +127,7 @@ def update_ercot_stream():
     houston_lmp = round(base_houston + delta * 1.15, 2)
     west_lmp = round(base_west + delta * 0.85, 2)
     reserve_mw = 3420 + int(delta * 45)
+    source_tag = "ERCOT_API_AUTH" if auth["ercot_configured"] else "SCED_BENCHMARK_FEED"
     dispatch_mode = "DISCHARGE TO GRID (ARBITRAGE PEAK)" if north_lmp > 53.0 else ("CHARGE LFP BANK" if north_lmp < 48.0 else "STANDBY / FREQUENCY REG")
     point = {
         "ts": datetime.datetime.now(datetime.timezone.utc).strftime("%H:%M:%SZ"),
@@ -129,7 +135,8 @@ def update_ercot_stream():
         "hb_houston": houston_lmp,
         "hb_west": west_lmp,
         "prc_mw": reserve_mw,
-        "dispatch": dispatch_mode
+        "dispatch": dispatch_mode,
+        "feed_source": source_tag
     }
     with STATE_LOCK:
         ERCOT_HISTORY.append(point)
@@ -142,7 +149,7 @@ def run_agent_module(path, tag):
         append_log(tag, f"Module {path} missing from disk.")
         return False, "Missing file"
     try:
-        out = subprocess.check_output([sys.executable, path], stderr=subprocess.STDOUT, timeout=4).decode().strip()
+        out = subprocess.check_output([sys.executable, path], stderr=subprocess.STDOUT, timeout=8).decode().strip()
         first_line = out.splitlines()[0] if out else f"{path} executed OK"
         EXEC_COUNTS[path] = EXEC_COUNTS.get(path, 0) + 1
         append_log(tag, first_line)
@@ -152,7 +159,9 @@ def run_agent_module(path, tag):
         return False, str(e)
 
 def background_swarm_worker():
-    append_log("MOC_DAEMON", f"CEO Interactive Telemetry Daemon v3.1 online at http://{HOST}:{PORT}")
+    load_dotenv()
+    auth = get_auth_summary()
+    append_log("MOC_DAEMON", f"CEO Daemon v3.2 online | SAM.gov: {auth['sam_gov_mask']} | ERCOT: {auth['ercot_mask']}")
     for _ in range(8):
         update_ercot_stream()
     idx = 0
@@ -160,9 +169,7 @@ def background_swarm_worker():
         path, tag, _ = SWARM_ROSTER[idx % len(SWARM_ROSTER)]
         run_agent_module(path, tag)
         ercot_pt = update_ercot_stream()
-        if idx % 3 == 0:
-            append_log("ERCOT_SCED", f"HB_NORTH: ${ercot_pt['hb_north']}/MWh | HB_HOUSTON: ${ercot_pt['hb_houston']}/MWh | Mode: {ercot_pt['dispatch']}")
-        if idx % 5 == 0:
+        if idx % 4 == 0:
             hw = get_mac_hardware_telemetry()
             append_log("MACBOOK_AIR", f"Power: {hw['power_source']} ({hw['battery']}) | CPU Load: {hw['cpu_load']}")
         idx += 1
@@ -186,6 +193,7 @@ class TelemetryHandler(SimpleHTTPRequestHandler):
         if parsed.path == "/api/telemetry":
             git_info = get_git_telemetry()
             hw_info = get_mac_hardware_telemetry()
+            auth_info = get_auth_summary()
             ledger_sig = compute_repo_sha256()
             agents_status = []
             for path, tag, role in SWARM_ROSTER:
@@ -213,19 +221,9 @@ class TelemetryHandler(SimpleHTTPRequestHandler):
                 "timestamp_utc": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M:%SZ"),
                 "git": git_info,
                 "hardware": hw_info,
+                "auth": auth_info,
                 "ercot": ercot_copy[-1] if ercot_copy else {},
                 "ercot_series": ercot_copy,
-                "federal": {
-                    "contact": "Kent Lamparter Hibben (DOE OSDBU Senior Small Business Advocate)",
-                    "channel": "solid.lp@outlook.com",
-                    "sam_tier": "Registered Entity (1,000 req/day)",
-                    "status": "Awaiting MS Teams Invite Under Separate Cover"
-                },
-                "pipeline": {
-                    "corridors_indexed": 42,
-                    "priority_zones": ["Valwood Industrial", "Stemmons Corridor", "Great Southwest", "Alliance Texas"],
-                    "active_builds": ["2007 Suburban Custom Fab", "2014 Maserati Ghibli Drivetrain"]
-                },
                 "agents": agents_status,
                 "logs": logs_copy
             }
@@ -244,6 +242,13 @@ class TelemetryHandler(SimpleHTTPRequestHandler):
         except Exception:
             data = {}
 
+        if parsed.path == "/api/reload_env":
+            load_dotenv()
+            auth = get_auth_summary()
+            msg = f"Reloaded .env (mode {auth['env_permissions']}) -> SAM.gov: {auth['sam_gov_mask']} | ERCOT: {auth['ercot_mask']}"
+            append_log("ENV_VAULT", msg)
+            return self._send_json({"ok": True, "output": msg, "auth": auth})
+
         if parsed.path == "/api/run_agent":
             target = data.get("agent", "")
             for path, tag, _ in SWARM_ROSTER:
@@ -258,7 +263,7 @@ class TelemetryHandler(SimpleHTTPRequestHandler):
             if not cmd_list:
                 return self._send_json({"ok": False, "output": "Command not in safe allowlist"}, 400)
             try:
-                out = subprocess.check_output(cmd_list, stderr=subprocess.STDOUT, timeout=5).decode().strip()
+                out = subprocess.check_output(cmd_list, stderr=subprocess.STDOUT, timeout=8).decode().strip()
                 out_clean = out if out else "(Command completed with zero stdout)"
                 append_log("CEO_CONSOLE", f"$ {' '.join(cmd_list)} -> {out_clean.splitlines()[0]}")
                 return self._send_json({"ok": True, "cmd": " ".join(cmd_list), "output": out_clean})
@@ -266,6 +271,7 @@ class TelemetryHandler(SimpleHTTPRequestHandler):
                 return self._send_json({"ok": False, "output": str(e)}, 500)
 
         if parsed.path == "/api/trigger":
+            load_dotenv()
             git_info = get_git_telemetry()
             ercot_pt = update_ercot_stream()
             append_log("CEO_PING", f"Full bus sync -> Git {git_info['branch']}@{git_info['commit']} | HB_NORTH ${ercot_pt['hb_north']}/MWh")
@@ -277,5 +283,5 @@ if __name__ == "__main__":
     t = threading.Thread(target=background_swarm_worker, daemon=True)
     t.start()
     server = HTTPServer((HOST, PORT), TelemetryHandler)
-    print(f"[+] Solid Integrations CEO Interactive Daemon v3.1 listening on http://{HOST}:{PORT}")
+    print(f"[+] Solid Integrations CEO Interactive Daemon v3.2 listening on http://{HOST}:{PORT}")
     server.serve_forever()

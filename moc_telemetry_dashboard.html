@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>SOLID INTEGRATIONS LLC // CEO COMMAND DECK v3.1</title>
+<title>SOLID INTEGRATIONS LLC // CEO COMMAND DECK v3.2</title>
 <style>
   :root { --bg: #070807; --panel: #101310; --border: #222922; --green: #00ff66; --amber: #ffcc00; --muted: #768276; --text: #dce6dc; }
   * { box-sizing: border-box; font-family: 'Courier New', monospace; }
@@ -12,7 +12,7 @@
   .sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
   .badge { background: var(--green); color: #000; padding: 5px 10px; font-weight: bold; font-size: 11px; }
   .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 12px; }
-  .grid-3 { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .grid-3 { display: grid; grid-template-columns: 1.15fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
   .grid-2 { display: grid; grid-template-columns: 1.35fr 0.65fr; gap: 12px; margin-bottom: 12px; }
   .card { background: var(--panel); border: 1px solid var(--border); padding: 12px; }
   .card h3 { margin: 0 0 8px 0; font-size: 11px; color: var(--muted); text-transform: uppercase; display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
@@ -39,10 +39,11 @@
 <body>
   <div class="header">
     <div>
-      <div class="title">SOLID INTEGRATIONS LLC // INTERACTIVE CEO TELEMETRY DECK v3.1</div>
+      <div class="title">SOLID INTEGRATIONS LLC // INTERACTIVE CEO TELEMETRY DECK v3.2</div>
       <div class="sub" id="hdrSub">CEO: LANCE T. PULLEN (SOLID LP) | CAGE: 20U61 | UEI: XT2KK6DNSLR5 | ROOT: 235021c9</div>
     </div>
     <div>
+      <button onclick="reloadEnv()">HOT-RELOAD .ENV VAULT</button>
       <button onclick="triggerPing()">SYNC ALL NODES</button>
       <span class="badge" id="daemonBadge">LIVE STREAM (3s)</span>
     </div>
@@ -58,23 +59,23 @@
 
   <div class="grid-3">
     <div class="card">
-      <h3><span>ERCOT Live SCED Arbitrage Feed</span><span id="ercotMode">STANDBY</span></h3>
+      <h3><span>ERCOT Live SCED Arbitrage Feed</span><span id="ercotFeedTag">SCED_BENCHMARK</span></h3>
       <div class="kv-row"><span class="kv-label">HB_NORTH / HB_HOUSTON / HB_WEST:</span><span class="kv-val" id="ercotZones">--</span></div>
-      <div class="kv-row"><span class="kv-label">ERCOT Physical Responsive Reserve:</span><span class="kv-val" id="ercotPrc">--</span></div>
+      <div class="kv-row"><span class="kv-label">ERCOT Responsive Reserve / Mode:</span><span class="kv-val" id="ercotPrc">--</span></div>
       <svg id="ercotChart" viewBox="0 0 300 90" preserveAspectRatio="none"></svg>
     </div>
 
     <div class="card">
-      <h3><span>Federal & DOE OSDBU Radar</span><span>CAGE: 20U61</span></h3>
-      <div class="kv-row"><span class="kv-label">DOE OSDBU Advocate:</span><span class="kv-val">Kent Lamparter Hibben</span></div>
-      <div class="kv-row"><span class="kv-label">Teleconference Status:</span><span class="kv-val" style="color:var(--amber);">Awaiting MS Teams Link</span></div>
-      <div class="kv-row"><span class="kv-label">SAM.gov Entity Tier:</span><span class="kv-val">UEI XT2KK6DNSLR5 (1,000/day)</span></div>
-      <div class="kv-row"><span class="kv-label">Primary Dispatch Inbox:</span><span class="kv-val">solid.lp@outlook.com</span></div>
+      <h3><span>.ENV Credential Vault & Federal Radar</span><span id="envMode">CHMOD 600</span></h3>
+      <div class="kv-row"><span class="kv-label">SAM_GOV_API_KEY:</span><span class="kv-val" id="authSam">CHECKING...</span></div>
+      <div class="kv-row"><span class="kv-label">ERCOT_SUBSCRIPTION_KEY:</span><span class="kv-val" id="authErcot">CHECKING...</span></div>
+      <div class="kv-row"><span class="kv-label">OUTLOOK_CLIENT_ID:</span><span class="kv-val" id="authOutlook">CHECKING...</span></div>
+      <div class="kv-row"><span class="kv-label">DOE OSDBU Advocate:</span><span class="kv-val" style="color:var(--amber);">Kent Hibben (MS Teams Pending)</span></div>
       <div class="kv-row"><span class="kv-label">Composite Repo Hash:</span><span class="kv-val" id="compHash">235021c9::...</span></div>
-      <div style="margin-top:8px; display:flex; gap:6px;">
-        <button class="btn-ghost" onclick="runCmd('sync_outlook')">POLL OUTLOOK</button>
-        <button class="btn-ghost" onclick="runAgent('agents/sam_gov_monitor.py')">PING SAM.GOV</button>
-        <button class="btn-ghost" onclick="runAgent('agents/federal_compliance_sentinel.py')">AUDIT DFARS</button>
+      <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;">
+        <button class="btn-ghost" onclick="reloadEnv()">RELOAD .ENV</button>
+        <button class="btn-ghost" onclick="runCmd('poll_sam')">POLL SAM.GOV API</button>
+        <button class="btn-ghost" onclick="runCmd('poll_ercot')">POLL ERCOT API</button>
       </div>
     </div>
 
@@ -84,7 +85,7 @@
       <div class="kv-row"><span class="kv-label">Legal Brokerage Intake:</span><span class="kv-val">Automated Contract Engine</span></div>
       <div class="kv-row"><span class="kv-label">CAN-Bus / Fab Profiles:</span><span class="kv-val">07 Suburban / 14 Ghibli</span></div>
       <div class="kv-row"><span class="kv-label">Local Git Commit:</span><span class="kv-val" id="gitState">main @ ...</span></div>
-      <div style="margin-top:8px; display:flex; gap:6px;">
+      <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;">
         <button class="btn-ghost" onclick="runCmd('scan_dfw')">RUN DFW SCRAPER</button>
         <button class="btn-ghost" onclick="runAgent('agents/can_bus_fleet.py')">SYNC CAN-BUS</button>
         <button class="btn-ghost" onclick="runAgent('agents/legal_brokerage_agent.py')">LEGAL INTAKE</button>
@@ -101,11 +102,11 @@
     <div class="card">
       <h3><span>Interactive Zsh Command Dispatch Console</span><span>~/antisolid</span></h3>
       <div class="cmd-bar">
+        <button class="btn-ghost" onclick="runCmd('audit_env')">env_loader</button>
+        <button class="btn-ghost" onclick="runCmd('poll_sam')">sam_gov_monitor</button>
+        <button class="btn-ghost" onclick="runCmd('poll_ercot')">ercot_arbitrage</button>
         <button class="btn-ghost" onclick="runCmd('git_status')">git status</button>
-        <button class="btn-ghost" onclick="runCmd('git_log')">git log -n 5</button>
         <button class="btn-ghost" onclick="runCmd('verify_hash')">sync_ledger_hash</button>
-        <button class="btn-ghost" onclick="runCmd('audit_firewall')">agent_firewall</button>
-        <button class="btn-ghost" onclick="runCmd('omega_exec')">omega_exec</button>
       </div>
       <div class="console-out" id="consoleOut">Click any command above to execute live in ~/antisolid and stream stdout here...</div>
     </div>
@@ -146,13 +147,22 @@ async function fetchTelemetry() {
     document.getElementById('mBatt').textContent = `${data.hardware.battery} (${data.hardware.power_source})`;
     document.getElementById('mHostSub').textContent = `${data.hardware.state} | Load: ${data.hardware.cpu_load}`;
 
+    if (data.auth) {
+      document.getElementById('authSam').textContent = data.auth.sam_gov_mask;
+      document.getElementById('authSam').style.color = data.auth.sam_gov_configured ? '#00ff66' : '#ffcc00';
+      document.getElementById('authErcot').textContent = data.auth.ercot_mask;
+      document.getElementById('authErcot').style.color = data.auth.ercot_configured ? '#00ff66' : '#ffcc00';
+      document.getElementById('authOutlook').textContent = data.auth.outlook_mask;
+      document.getElementById('envMode').textContent = `MODE ${data.auth.env_permissions}`;
+    }
+
     if (data.ercot && data.ercot.hb_north) {
       document.getElementById('mErcot').textContent = `$${data.ercot.hb_north.toFixed(2)} / MWh`;
       document.getElementById('mErcotSub').textContent = data.ercot.dispatch;
-      document.getElementById('ercotMode').textContent = data.ercot.dispatch;
+      document.getElementById('ercotFeedTag').textContent = data.ercot.feed_source || 'SCED_BENCHMARK';
       document.getElementById('ercotZones').textContent =
         `$${data.ercot.hb_north} / $${data.ercot.hb_houston} / $${data.ercot.hb_west}`;
-      document.getElementById('ercotPrc').textContent = `${data.ercot.prc_mw} MW`;
+      document.getElementById('ercotPrc').textContent = `${data.ercot.prc_mw} MW | ${data.ercot.dispatch}`;
     }
     renderSparkline(data.ercot_series);
 
@@ -181,6 +191,15 @@ async function fetchTelemetry() {
   } catch (err) {
     document.getElementById('daemonBadge').textContent = 'DAEMON OFFLINE';
   }
+}
+
+async function reloadEnv() {
+  const outEl = document.getElementById('consoleOut');
+  outEl.textContent = '[VAULT] Reloading ~/antisolid/.env...';
+  const res = await fetch('/api/reload_env', { method: 'POST' });
+  const data = await res.json();
+  outEl.textContent = data.output;
+  fetchTelemetry();
 }
 
 async function runAgent(agentPath) {
