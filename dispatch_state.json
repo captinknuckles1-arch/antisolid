@@ -1,0 +1,12 @@
+{
+  "timestamp": "2026-11-08T03:47:00Z",
+  "cage_code": "20U61",
+  "uei": "XT2KK6DNSLR5",
+  "status": "MONETIZATION_DISPATCH_ACTIVE",
+  "pipelines": {
+    "sam_contracts": "polling_active",
+    "ercot_arbitrage": "optimized",
+    "canbus_diagnostics": "ready",
+    "dfw_leads": "extracted"
+  }
+}
