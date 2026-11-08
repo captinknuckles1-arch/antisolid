@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>SOLID INTEGRATIONS // LANCE'S NEURAL COMMAND CENTER</title>
 <style>
-  :root { --bg: #050705; --card: #0d120d; --border: #1f2b1f; --green: #00ff66; --cyan: #00e5ff; --amber: #ffb700; --red: #ff4d4d; --text: #e8f0e8; --muted: #8a998a; }
+  :root { --bg: #050705; --card: #0d120d; --border: #1f2b1f; --green: #00ff66; --cyan: #00e5ff; --amber: #ffb700; --text: #e8f0e8; --muted: #8a998a; }
   * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
   body { margin: 0; padding: 16px; background: var(--bg); color: var(--text); font-size: 13px; }
   .top-bar { border: 2px solid var(--green); background: var(--card); padding: 14px 18px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 14px; }
@@ -19,16 +19,16 @@
   .stat-val { font-size: 24px; font-weight: 800; color: var(--green); margin: 6px 0 4px 0; }
   .stat-note { font-size: 11.5px; color: var(--muted); }
   .main-grid { display: grid; grid-template-columns: 1.35fr 0.65fr; gap: 14px; margin-bottom: 14px; }
-  .sub-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 14px; margin-bottom: 14px; }
+  .sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
   .card { background: var(--card); border: 1px solid var(--border); padding: 16px; border-radius: 6px; }
   .card-title { font-size: 14px; font-weight: 800; color: var(--green); margin: 0 0 10px 0; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
-  canvas { width: 100%; height: 480px; background: radial-gradient(circle at center, #0a140a 0%, #040604 100%); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; display: block; }
+  canvas { width: 100%; height: 460px; background: radial-gradient(circle at center, #0a140a 0%, #040604 100%); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; display: block; }
   .inspector { background: #070b07; border: 1px solid var(--green); padding: 12px; border-radius: 6px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-  .feed-box { height: 290px; overflow-y: auto; background: #060906; border: 1px solid var(--border); border-radius: 4px; padding: 10px; }
-  .feed-item { padding: 7px 0; border-bottom: 1px solid #121a12; font-size: 12.5px; line-height: 1.4; }
+  .feed-box { height: 280px; overflow-y: auto; background: #060906; border: 1px solid var(--border); border-radius: 4px; padding: 10px; }
+  .feed-item { padding: 7px 0; border-bottom: 1px solid #121a12; font-size: 12px; line-height: 1.4; }
   .legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; }
-  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
-  th, td { border-bottom: 1px solid var(--border); padding: 8px 6px; text-align: left; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th, td { border-bottom: 1px solid var(--border); padding: 7px 6px; text-align: left; }
   th { color: var(--muted); font-size: 11px; text-transform: uppercase; }
   input, select { background: #060906; color: var(--text); border: 1px solid var(--border); padding: 7px; border-radius: 4px; font-size: 12px; }
 </style>
@@ -37,7 +37,7 @@
 
   <div class="top-bar">
     <div>
-      <div class="title">SOLID INTEGRATIONS LLC // LIVE NEURAL BRAIN & MONEY COMMAND</div>
+      <div class="title">SOLID INTEGRATIONS LLC // LIVE NEURAL BRAIN & REAL DALLAS RADAR</div>
       <div class="subtitle">Owner & CEO: Lance T. Pullen (Solid LP) • Federal CAGE: 20U61 • UEI: XT2KK6DNSLR5 • Zero Fake Data Mode</div>
     </div>
     <div style="display:flex; gap:10px; align-items:center;">
@@ -46,7 +46,7 @@
     </div>
   </div>
 
-  <!-- HONEST, VERIFIED MONEY & LIVE MARKET STRIP -->
+  <!-- HONEST, VERIFIED MONEY STRIP -->
   <div class="money-strip">
     <div class="stat-box">
       <div class="stat-label">Verified Cash Collected</div>
@@ -61,7 +61,7 @@
     <div class="stat-box">
       <div class="stat-label">Target Pace ($3.85M/Yr Goal)</div>
       <div class="stat-val" id="targetTodayClock">$0.00</div>
-      <div class="stat-note" id="targetSpeedNote">Target pace: $0.1220/sec ($439.20/hr)</div>
+      <div class="stat-note">Target pace: $0.1220/sec ($439.20/hr)</div>
     </div>
     <div class="stat-box">
       <div class="stat-label">Live Bitcoin & Dogecoin</div>
@@ -75,7 +75,7 @@
     </div>
   </div>
 
-  <!-- KINETIC BRAIN NETWORK + LIVE ACTIVITY FEED -->
+  <!-- KINETIC BRAIN NETWORK + LIVE AGENT REPORTS -->
   <div class="main-grid">
     <div class="card">
       <div class="card-title">
@@ -86,11 +86,11 @@
           <span class="legend-dot" style="background:#ffb700; margin-left:8px;"></span>Protection & Legal
         </span>
       </div>
-      <canvas id="brainCanvas" width="900" height="480"></canvas>
+      <canvas id="brainCanvas" width="900" height="460"></canvas>
       <div class="inspector">
         <div>
-          <div style="font-weight:800; color:var(--green); font-size:14px;" id="selName">Click any glowing neuron in the brain above to inspect or run it</div>
-          <div style="color:var(--text); margin-top:3px;" id="selDesc">When a neuron fires, you will see a bright pulse travel from the Central Brain to that agent, showing where the task is going in real time.</div>
+          <div style="font-weight:800; color:var(--green); font-size:14px;" id="selName">Click any neuron in the brain network to inspect or run it</div>
+          <div style="color:var(--text); margin-top:3px;" id="selDesc">When a neuron fires, an electrical signal pulse travels from the Central Brain to that agent.</div>
           <div style="color:var(--muted); font-size:11.5px; margin-top:4px;" id="selOut">Last Report: Waiting for click...</div>
         </div>
         <button class="btn" id="selBtn" onclick="fireSelectedNode()">RUN THIS AGENT NOW</button>
@@ -100,7 +100,7 @@
     <div class="card">
       <div class="card-title">
         <span>⚡ WHAT YOUR AGENTS ARE DOING RIGHT NOW</span>
-        <span style="font-size:11px; color:var(--muted);" id="clockStamp">Live</span>
+        <span style="font-size:11px; color:var(--muted);">Live Subprocess Feed</span>
       </div>
       <div class="feed-box" id="liveFeed"></div>
 
@@ -123,42 +123,44 @@
     </div>
   </div>
 
-  <!-- INTERACTIVE PLAIN-ENGLISH TEXAS POWER GRID GRAPH + BUSINESS DIVISIONS -->
+  <!-- REAL DALLAS OPEN DATA PERMITS + INTERACTIVE ERCOT GRAPH -->
   <div class="sub-grid">
+    <!-- REAL DALLAS PERMIT RADAR TABLE -->
     <div class="card">
       <div class="card-title">
-        <span>🔋 TEXAS POWER GRID (ERCOT) — WHEN WE BUY & SELL ELECTRICITY FOR PROFIT</span>
-        <span style="font-size:11px; color:var(--amber);">Hover over any dot on the curve below</span>
+        <span>📍 REAL DALLAS BUILDING PERMITS (LIVE CITY OPEN DATA)</span>
+        <button class="btn-outline" style="padding:4px 8px;" onclick="refreshPermits()">SCAN CITY NOW</button>
       </div>
       <div style="font-size:12px; color:var(--muted); margin-bottom:8px;">
-        <b>How this makes money in plain English:</b> Electricity prices in Texas change all day. When power drops <b>below $30</b> (usually overnight), batteries <b>BUY & CHARGE</b> cheap electricity. When hot afternoon demand pushes prices <b>above $55</b>, batteries <b>SELL</b> that power back to the grid for profit.
-      </div>
-      <svg id="ercotSvg" viewBox="0 0 650 220" style="width:100%; height:210px; background:#060a06; border:1px solid var(--border); border-radius:6px;"></svg>
-      <div id="ercotExplainBox" style="margin-top:8px; padding:10px; background:#081008; border-left:3px solid var(--green); font-size:12.5px;">
-        Move your mouse over any hour on the chart above to see the exact price per Megawatt-Hour and what our battery system does at that hour.
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">
-        <span>📊 SOLID INTEGRATIONS BUSINESS DIVISIONS (REAL LEDGER)</span>
-        <span style="font-size:11px; color:var(--muted);">Saved on Laptop</span>
+        Live municipal building records pulled directly from <b>City of Dallas Open Data (e7gq-4sah)</b>. Showing real street addresses and declared values (or city-stated square footage).
       </div>
       <table>
         <thead>
           <tr>
-            <th>Business Division</th>
-            <th>Yearly Goal</th>
-            <th>Real Cash Paid</th>
-            <th>Open Bills</th>
+            <th>Street Address</th>
+            <th>Permit Type</th>
+            <th>Work Description</th>
+            <th>Declared Value</th>
           </tr>
         </thead>
-        <tbody id="divTable"></tbody>
+        <tbody id="permitRows">
+          <tr><td colspan="4" style="color:var(--muted); text-align:center;">Scanning City of Dallas Open Data feed...</td></tr>
+        </tbody>
       </table>
+    </div>
 
-      <div style="margin-top:14px; padding:10px; background:#070b07; border:1px solid var(--border); border-radius:4px; font-size:12px; line-height:1.5;">
-        <div><b style="color:var(--green);">Department of Energy Contact:</b> Kent Lamparter Hibben (Senior Small Business Advocate) — Watching <b>solid.lp@outlook.com</b> for Microsoft Teams invite.</div>
-        <div style="margin-top:4px;"><b style="color:var(--green);"> Live Data Connections:</b> Coinbase Crypto Prices (Live), U.S. Treasury Interest Rates (Live), City of Dallas Permits (Live), Texas Business Registry (Live).</div>
+    <!-- ERCOT POWER GRAPH -->
+    <div class="card">
+      <div class="card-title">
+        <span>🔋 TEXAS POWER GRID (ERCOT) — HOURLY BUY / SELL PROFIT CURVE</span>
+        <span style="font-size:11px; color:var(--amber);">Hover over any hour dot</span>
+      </div>
+      <div style="font-size:12px; color:var(--muted); margin-bottom:6px;">
+        Wholesale electricity price curve for North Texas (Dallas). Batteries <b>BUY under $30</b> (green zone) and <b>SELL above $55</b> (gold zone).
+      </div>
+      <svg id="ercotSvg" viewBox="0 0 650 200" style="width:100%; height:190px; background:#060a06; border:1px solid var(--border); border-radius:6px;"></svg>
+      <div id="ercotExplainBox" style="margin-top:8px; padding:8px 10px; background:#081008; border-left:3px solid var(--green); font-size:12px;">
+        Move your mouse over any hour dot on the chart to see the price and our battery trade action.
       </div>
     </div>
   </div>
@@ -166,7 +168,7 @@
 <script>
 let brainNodes = [];
 let activePulses = [];
-let selectedNodeId = 1;
+let selectedNodeId = 10; // Default to Dallas Permit Scout
 let ercotData = [];
 const canvas = document.getElementById('brainCanvas');
 const ctx = canvas.getContext('2d');
@@ -192,7 +194,7 @@ function layoutBrainNodes(nodes) {
       const idx = n.id - 11;
       const angle = (idx / ring2.length) * Math.PI * 2 - Math.PI / 2;
       n.x = cx + Math.cos(angle) * 265;
-      n.y = cy + Math.sin(angle) * 195;
+      n.y = cy + Math.sin(angle) * 190;
       n.r = 10;
     }
   });
@@ -214,7 +216,6 @@ function drawBrainNetwork() {
   const core = brainNodes[0];
   const now = performance.now();
 
-  // 1. Draw synaptic web connections
   brainNodes.forEach((n, idx) => {
     if (n.id === 0) return;
     ctx.beginPath();
@@ -224,7 +225,6 @@ function drawBrainNetwork() {
     ctx.lineWidth = 1;
     ctx.stroke();
 
-    // Connect neighboring ring neurons like a brain cortex
     const next = brainNodes[(idx % (brainNodes.length - 1)) + 1];
     if (next) {
       ctx.beginPath();
@@ -235,7 +235,6 @@ function drawBrainNetwork() {
     }
   });
 
-  // 2. Draw traveling electrical pulses along neural pathways
   activePulses.forEach(p => {
     const target = brainNodes.find(n => n.id === p.to);
     if (!target) return;
@@ -243,15 +242,13 @@ function drawBrainNetwork() {
     const px = core.x + (target.x - core.x) * progress;
     const py = core.y + (target.y - core.y) * progress;
 
-    // Highlight active synapse line
     ctx.beginPath();
     ctx.moveTo(core.x, core.y);
     ctx.lineTo(target.x, target.y);
-    ctx.strokeStyle = 'rgba(0, 255, 102, 0.55)';
+    ctx.strokeStyle = 'rgba(0, 255, 102, 0.6)';
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    // Glowing traveling spark
     ctx.beginPath();
     ctx.arc(px, py, 5, 0, Math.PI * 2);
     ctx.fillStyle = '#ffffff';
@@ -261,7 +258,6 @@ function drawBrainNetwork() {
     ctx.shadowBlur = 0;
   });
 
-  // 3. Draw Neuron Nodes & Plain-English Labels
   brainNodes.forEach(n => {
     const col = getGroupColor(n.group);
     const isSel = n.id === selectedNodeId;
@@ -318,14 +314,18 @@ function selectNode(id) {
 }
 
 async function fireSelectedNode() {
-  const res = await fetch('/api/fire_node', {
+  await fetch('/api/fire_node', {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({id: selectedNodeId})
   });
-  const data = await res.json();
   activePulses.push({to: selectedNodeId, born: performance.now()});
   pullState();
+}
+
+async function refreshPermits() {
+  selectNode(10);
+  await fireSelectedNode();
 }
 
 async function fireRandomWave() {
@@ -343,7 +343,7 @@ async function fireRandomWave() {
 function drawErcotChart(curve) {
   const svg = document.getElementById('ercotSvg');
   if (!curve || !curve.length) return;
-  const w = 650, h = 220, padL = 50, padR = 20, padT = 20, padB = 32;
+  const w = 650, h = 200, padL = 45, padR = 15, padT = 16, padB = 28;
   const plotW = w - padL - padR;
   const plotH = h - padT - padB;
   const maxP = 110;
@@ -355,29 +355,27 @@ function drawErcotChart(curve) {
   const sellY = yForPrice(55);
 
   let html = `
-    <!-- Green Buy Zone below $30 -->
     <rect x="${padL}" y="${buyY}" width="${plotW}" height="${padT + plotH - buyY}" fill="rgba(0, 255, 102, 0.08)" />
     <line x1="${padL}" y1="${buyY}" x2="${w - padR}" y2="${buyY}" stroke="#00ff66" stroke-dasharray="4,4" />
-    <text x="${padL + 6}" y="${buyY - 5}" fill="#00ff66" font-size="10" font-weight="bold">BUY / CHARGE ZONE (Under $30/MWh)</text>
+    <text x="${padL + 6}" y="${buyY - 5}" fill="#00ff66" font-size="9.5" font-weight="bold">BUY / CHARGE ZONE (Under $30/MWh)</text>
 
-    <!-- Amber Sell Zone above $55 -->
     <rect x="${padL}" y="${padT}" width="${plotW}" height="${sellY - padT}" fill="rgba(255, 183, 0, 0.09)" />
     <line x1="${padL}" y1="${sellY}" x2="${w - padR}" y2="${sellY}" stroke="#ffb700" stroke-dasharray="4,4" />
-    <text x="${padL + 6}" y="${sellY - 5}" fill="#ffb700" font-size="10" font-weight="bold">SELL FOR PROFIT ZONE (Over $55/MWh)</text>
+    <text x="${padL + 6}" y="${sellY - 5}" fill="#ffb700" font-size="9.5" font-weight="bold">SELL FOR PROFIT ZONE (Over $55/MWh)</text>
   `;
 
   const pts = curve.map((c, i) => `${xForIdx(i)},${yForPrice(c.price)}`).join(' ');
-  html += `<polyline fill="none" stroke="#00e5ff" stroke-width="3" points="${pts}" />`;
+  html += `<polyline fill="none" stroke="#00e5ff" stroke-width="2.5" points="${pts}" />`;
 
   curve.forEach((c, i) => {
     const cx = xForIdx(i);
     const cy = yForPrice(c.price);
     const dotCol = c.price >= 55 ? '#ffb700' : (c.price <= 30 ? '#00ff66' : '#00e5ff');
     html += `
-      <circle cx="${cx}" cy="${cy}" r="6" fill="${dotCol}" stroke="#000" stroke-width="1.5" style="cursor:pointer;"
+      <circle cx="${cx}" cy="${cy}" r="5.5" fill="${dotCol}" stroke="#000" stroke-width="1.5" style="cursor:pointer;"
         onmouseenter="explainErcot(${i})" />
-      <text x="${cx}" y="${h - 10}" fill="#8a998a" font-size="10" text-anchor="middle">${c.hour}</text>
-      <text x="${cx}" y="${cy - 10}" fill="#e8f0e8" font-size="10" text-anchor="middle">$${c.price.toFixed(0)}</text>
+      <text x="${cx}" y="${h - 8}" fill="#8a998a" font-size="9.5" text-anchor="middle">${c.hour}</text>
+      <text x="${cx}" y="${cy - 8}" fill="#e8f0e8" font-size="9.5" text-anchor="middle">$${c.price.toFixed(0)}</text>
     `;
   });
 
@@ -437,7 +435,7 @@ async function pullState() {
     if (!brainNodes.length) {
       brainNodes = data.nodes;
       layoutBrainNodes(brainNodes);
-      selectNode(1);
+      selectNode(10);
     } else {
       data.nodes.forEach((n, i) => {
         brainNodes[i].runs = n.runs;
@@ -456,14 +454,17 @@ async function pullState() {
       </div>
     `).join('');
 
-    document.getElementById('divTable').innerHTML = data.money.streams.map(s => `
-      <tr>
-        <td><b>${s.name}</b></td>
-        <td>$${s.target.toLocaleString()}</td>
-        <td style="color:var(--green); font-weight:bold;">$${s.collected.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
-        <td style="color:var(--amber);">$${s.invoiced.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
-      </tr>
-    `).join('');
+    // Render Real Dallas Building Permits Table
+    if (data.dallas_permits && data.dallas_permits.length) {
+      document.getElementById('permitRows').innerHTML = data.dallas_permits.map(p => `
+        <tr>
+          <td><b style="color:var(--green);">${p.address}</b><div style="font-size:10.5px; color:var(--muted);">Permit #: ${p.permit_number}</div></td>
+          <td>${p.permit_type}</td>
+          <td style="color:var(--text); max-width:240px;">${p.description}</td>
+          <td style="color:${p.value.startsWith('$') ? '#00ff66' : '#ffb700'}; font-weight:bold;">${p.value}</td>
+        </tr>
+      `).join('');
+    }
 
     if (!ercotData.length && data.ercot_curve) {
       ercotData = data.ercot_curve;

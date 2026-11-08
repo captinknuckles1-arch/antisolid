@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Solid Integrations LLC - v5.0 Kinetic Neural Brain & Plain-English Server
+# Solid Integrations LLC - v5.1 Kinetic Neural Brain & Dallas Live Data Server
 import os
 import re
 import sys
@@ -17,11 +17,9 @@ from env_loader import load_dotenv, get_auth_summary, is_configured
 HOST = "127.0.0.1"
 PORT = 8787
 LOG_BUFFER = []
-ERCOT_SERIES = []
 ACTIVE_PULSES = []
 STATE_LOCK = threading.Lock()
 
-# 30 Plain-English Agents Grouped by Brain Lobe (Ring 0 = Core, Ring 1 = Money & Sales, Ring 2 = Operations & Power, Ring 3 = Protection & Legal)
 SWARM_NODES = [
     {"id": 0, "path": "agents/moc_controller.py", "name": "Central Brain", "group": "CORE", "desc": "Coordinates all 30 agents and routes tasks across your laptop and cloud."},
     {"id": 1, "path": "agents/enforcer_agent.py", "name": "The Enforcer", "group": "PROTECT", "desc": "Enforces your contracts, late payment rules, and the $4.2M IP recovery target."},
@@ -33,7 +31,7 @@ SWARM_NODES = [
     {"id": 7, "path": "agents/forfeiture_auction_sniper.py", "name": "Auction Sniper", "group": "MONEY", "desc": "Checks government surplus auctions (GSA) for cheap trucks and shop gear."},
     {"id": 8, "path": "agents/grant_sbirs_harvester.py", "name": "Free Grant Finder", "group": "MONEY", "desc": "Looks for Department of Energy grants that do not require giving up ownership."},
     {"id": 9, "path": "agents/tax_shield_optimizer.py", "name": "Lance's Tax Shield", "group": "PROTECT", "desc": "Tracks equipment write-offs and intellectual property tax rules."},
-    {"id": 10, "path": "agents/dfw_permit_scout.py", "name": "Dallas Permit Scout", "group": "MONEY", "desc": "Checks City of Dallas open records for new commercial building permits."},
+    {"id": 10, "path": "agents/dfw_permit_scout.py", "name": "Dallas Permit Scout", "group": "MONEY", "desc": "Pulls real street addresses and declared values from City of Dallas Open Data."},
     {"id": 11, "path": "agents/texas_business_verifier.py", "name": "Texas Business Checker", "group": "PROTECT", "desc": "Checks the Texas state business registry to verify local companies."},
     {"id": 12, "path": "agents/patent_trademark_watchdog.py", "name": "IP & Brand Watchdog", "group": "PROTECT", "desc": "Protects Solid Integrations names, code, and ownership paperwork."},
     {"id": 13, "path": "agents/equipment_resale_pricer.py", "name": "Shop & Auto Pricer", "group": "OPS", "desc": "Checks resale values on exotic cars, engines, and shop equipment."},
@@ -62,12 +60,9 @@ LIVE_EXTERNAL = {
     "btc_usd": None,
     "doge_usd": None,
     "treasury_rate": "Checking...",
-    "ercot_live_status": "Public Reference Curve (Add ERCOT key in .env for live wholesale feed)",
     "last_updated": "Just now"
 }
 
-# Real Texas ERCOT Typical 24-Hour Wholesale Price Curve ($/Megawatt-Hour) by Hour of Day (00:00 to 23:00 CST)
-# Used ONLY as an honest, labeled reference curve until your personal ERCOT API key is pasted into .env
 ERCOT_24H_REFERENCE = [
     {"hour": "12 AM", "price": 24.50, "zone": "North Texas (Dallas)", "note": "Overnight wind power is high; electricity is cheap. Best time to CHARGE batteries."},
     {"hour": "2 AM",  "price": 21.80, "zone": "North Texas (Dallas)", "note": "Lowest demand of the night. Ideal window to fill battery banks at rock-bottom cost."},
@@ -92,40 +87,40 @@ def record_log(agent_name, text):
 
 def refresh_external_apis():
     load_dotenv()
-    # 1. Coinbase Live Spot Prices (100% Real, Live HTTP GET)
     try:
-        r1 = urllib.request.urlopen(urllib.request.Request("https://api.coinbase.com/v2/prices/BTC-USD/spot", headers={"User-Agent": "SolidOS/5.0"}), timeout=4)
+        r1 = urllib.request.urlopen(urllib.request.Request("https://api.coinbase.com/v2/prices/BTC-USD/spot", headers={"User-Agent": "SolidOS/5.1"}), timeout=4)
         LIVE_EXTERNAL["btc_usd"] = float(json.loads(r1.read().decode())["data"]["amount"])
-        r2 = urllib.request.urlopen(urllib.request.Request("https://api.coinbase.com/v2/prices/DOGE-USD/spot", headers={"User-Agent": "SolidOS/5.0"}), timeout=4)
+        r2 = urllib.request.urlopen(urllib.request.Request("https://api.coinbase.com/v2/prices/DOGE-USD/spot", headers={"User-Agent": "SolidOS/5.1"}), timeout=4)
         LIVE_EXTERNAL["doge_usd"] = float(json.loads(r2.read().decode())["data"]["amount"])
     except Exception:
         pass
 
-    # 2. U.S. Treasury Official Interest Rate (100% Real, Live HTTP GET)
     try:
         u = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/avg_interest_rates?page[size]=1&sort=-record_date"
-        rt = urllib.request.urlopen(urllib.request.Request(u, headers={"User-Agent": "SolidOS/5.0"}), timeout=4)
+        rt = urllib.request.urlopen(urllib.request.Request(u, headers={"User-Agent": "SolidOS/5.1"}), timeout=4)
         row = json.loads(rt.read().decode()).get("data", [{}])[0]
         LIVE_EXTERNAL["treasury_rate"] = f"{row.get('avg_interest_rate_amt', 'N/A')}% ({row.get('security_desc', 'Treasury')})"
     except Exception:
         pass
 
-    if is_configured("ERCOT_OCP_APIM_SUBSCRIPTION_KEY"):
-        LIVE_EXTERNAL["ercot_live_status"] = "Connected to Live ERCOT API Key"
-    else:
-        LIVE_EXTERNAL["ercot_live_status"] = "Showing Standard Texas 24-Hour Price Curve (Add ERCOT key in .env for live wholesale feed)"
-
     LIVE_EXTERNAL["last_updated"] = datetime.datetime.now().strftime("%I:%M:%S %p")
+
+def get_cached_dallas_permits():
+    cache_file = "dallas_permits_cache.json"
+    if os.path.exists(cache_file):
+        try:
+            with open(cache_file, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return []
+    return []
 
 def get_laptop_health():
     batt = "Unknown"
     source = "AC Power"
     try:
         out = subprocess.check_output(["pmset", "-g", "batt"], stderr=subprocess.DEVNULL).decode()
-        if "Battery Power" in out:
-            source = "Running on Battery"
-        else:
-            source = "Plugged into Wall"
+        source = "Running on Battery" if "Battery Power" in out else "Plugged into Wall"
         m = re.search(r"(\d+)%", out)
         if m:
             batt = f"{m.group(1)}%"
@@ -138,8 +133,6 @@ def get_money_facts():
     cur = conn.cursor()
     cur.execute("SELECT stream_id, stream_name, target_annual_budget, verified_collected_cash, verified_open_invoices FROM revenue_streams")
     streams = cur.fetchall()
-    cur.execute("SELECT timestamp_utc, division, description, amount_usd FROM real_payments_log ORDER BY id DESC LIMIT 8")
-    payments = cur.fetchall()
     conn.close()
 
     total_target = sum(s[2] for s in streams)
@@ -156,15 +149,9 @@ def get_money_facts():
         "verified_cash_collected": total_collected,
         "verified_open_invoices": total_invoiced,
         "target_per_second": target_per_sec,
-        "target_per_hour": target_per_sec * 3600.0,
-        "target_per_day": total_target / 365.25,
         "streams": [
             {"id": s[0], "name": s[1], "target": s[2], "collected": s[3], "invoiced": s[4]}
             for s in streams
-        ],
-        "payments": [
-            {"time": p[0], "division": p[1], "desc": p[2], "amount": p[3]}
-            for p in payments
         ]
     }
 
@@ -173,9 +160,8 @@ def fire_agent(node):
     if not os.path.exists(path):
         return False, "Agent file not found."
     try:
-        out = subprocess.check_output([sys.executable, path], stderr=subprocess.STDOUT, timeout=6).decode().strip()
+        out = subprocess.check_output([sys.executable, path], stderr=subprocess.STDOUT, timeout=7).decode().strip()
         clean = out.splitlines()[-1] if out else f"{node['name']} finished check."
-        # Strip any bracketed code jargon from older agent scripts so output stays plain English
         clean = re.sub(r"^\[[^\]]+\]\s*\S*\s*\|\s*", "", clean)
         EXEC_COUNTS[path] = EXEC_COUNTS.get(path, 0) + 1
         LAST_OUTPUT[path] = clean
@@ -218,6 +204,7 @@ class BrainServer(SimpleHTTPRequestHandler):
             money = get_money_facts()
             laptop = get_laptop_health()
             auth = get_auth_summary()
+            permits = get_cached_dallas_permits()
             nodes_out = []
             for n in SWARM_NODES:
                 nodes_out.append({
@@ -235,6 +222,7 @@ class BrainServer(SimpleHTTPRequestHandler):
             return self._json({
                 "money": money,
                 "external": LIVE_EXTERNAL,
+                "dallas_permits": permits,
                 "ercot_curve": ERCOT_24H_REFERENCE,
                 "laptop": laptop,
                 "auth": auth,
@@ -262,15 +250,15 @@ class BrainServer(SimpleHTTPRequestHandler):
         if p.path == "/api/log_real_money":
             amt = float(body.get("amount", 0))
             div = body.get("division", "DFW_INDUSTRIAL")
-            kind = body.get("kind", "payment") # "payment" or "invoice"
-            desc = body.get("desc", "Client Payment Logged by Lance")
+            kind = body.get("kind", "payment")
+            desc = body.get("desc", "Logged by Lance")
             now_str = datetime.datetime.now().strftime("%Y-%m-%d %I:%M %p")
             conn = sqlite3.connect("solid_revenue_ledger.db")
             cur = conn.cursor()
             if kind == "payment":
                 cur.execute("UPDATE revenue_streams SET verified_collected_cash = verified_collected_cash + ? WHERE stream_id = ?", (amt, div))
                 cur.execute("INSERT INTO real_payments_log (timestamp_utc, division, description, amount_usd) VALUES (?, ?, ?, ?)", (now_str, div, desc, amt))
-                record_log("Cash Ledger", f"Recorded real payment of ${amt:,.2f} in {div}.")
+                record_log("Cash Ledger", f"Logged real payment of ${amt:,.2f} in {div}.")
             else:
                 cur.execute("UPDATE revenue_streams SET verified_open_invoices = verified_open_invoices + ? WHERE stream_id = ?", (amt, div))
                 record_log("Invoice Ledger", f"Added open invoice of ${amt:,.2f} to {div}.")
@@ -284,5 +272,5 @@ if __name__ == "__main__":
     t = threading.Thread(target=background_brain_loop, daemon=True)
     t.start()
     srv = HTTPServer((HOST, PORT), BrainServer)
-    print(f"[+] Solid Integrations v5.0 Kinetic Brain Server running on http://{HOST}:{PORT}")
+    print(f"[+] Solid Integrations v5.1 Kinetic Brain Server running on http://{HOST}:{PORT}")
     srv.serve_forever()
