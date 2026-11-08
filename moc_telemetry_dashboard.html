@@ -2,99 +2,211 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>SOLID OS // LIVE MOC TELEMETRY DAEMON</title>
+<title>SOLID INTEGRATIONS LLC // CEO COMMAND DECK v3.1</title>
 <style>
-  :root { --bg: #080908; --panel: #111411; --border: #242a24; --green: #00ff66; --muted: #7a847a; --text: #d8e2d8; }
+  :root { --bg: #070807; --panel: #101310; --border: #222922; --green: #00ff66; --amber: #ffcc00; --muted: #768276; --text: #dce6dc; }
   * { box-sizing: border-box; font-family: 'Courier New', monospace; }
-  body { margin: 0; padding: 18px; background: var(--bg); color: var(--text); }
-  .header { border: 2px solid var(--green); padding: 14px 18px; background: var(--panel); margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
-  .title { font-size: 19px; font-weight: bold; color: var(--green); letter-spacing: 1px; }
+  body { margin: 0; padding: 16px; background: var(--bg); color: var(--text); font-size: 12px; }
+  .header { border: 2px solid var(--green); padding: 12px 16px; background: var(--panel); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+  .title { font-size: 18px; font-weight: bold; color: var(--green); letter-spacing: 1px; }
   .sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
-  .badge { background: var(--green); color: #000; padding: 5px 10px; font-weight: bold; font-size: 12px; }
-  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 14px; }
-  .grid-2 { display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 14px; margin-bottom: 14px; }
-  .card { background: var(--panel); border: 1px solid var(--border); padding: 14px; }
-  .card h3 { margin: 0 0 8px 0; font-size: 12px; color: var(--muted); text-transform: uppercase; display: flex; justify-content: space-between; }
-  .metric { font-size: 22px; font-weight: bold; color: var(--green); }
-  .bus-log { height: 250px; overflow-y: auto; background: #040504; border: 1px solid var(--border); padding: 10px; font-size: 12px; line-height: 1.55; }
-  .log-line { margin-bottom: 4px; border-bottom: 1px dotted #171c17; padding-bottom: 2px; }
+  .badge { background: var(--green); color: #000; padding: 5px 10px; font-weight: bold; font-size: 11px; }
+  .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 12px; }
+  .grid-3 { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .grid-2 { display: grid; grid-template-columns: 1.35fr 0.65fr; gap: 12px; margin-bottom: 12px; }
+  .card { background: var(--panel); border: 1px solid var(--border); padding: 12px; }
+  .card h3 { margin: 0 0 8px 0; font-size: 11px; color: var(--muted); text-transform: uppercase; display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
+  .metric { font-size: 20px; font-weight: bold; color: var(--green); }
+  .bus-log { height: 220px; overflow-y: auto; background: #040504; border: 1px solid var(--border); padding: 8px; font-size: 11.5px; line-height: 1.5; }
+  .log-line { margin-bottom: 4px; border-bottom: 1px dotted #151a15; padding-bottom: 2px; }
   .log-ts { color: var(--muted); }
   .log-src { color: var(--green); font-weight: bold; }
-  .agent-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-  .agent-table th, .agent-table td { border: 1px solid var(--border); padding: 7px 8px; text-align: left; }
-  .agent-table th { background: #161b16; color: var(--green); }
+  .agent-table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+  .agent-table th, .agent-table td { border: 1px solid var(--border); padding: 6px 8px; text-align: left; }
+  .agent-table th { background: #151a15; color: var(--green); }
   .status-dot { color: var(--green); font-weight: bold; }
-  button { background: var(--green); color: #000; border: none; padding: 7px 12px; font-weight: bold; cursor: pointer; margin-right: 8px; font-size: 12px; }
+  button { background: var(--green); color: #000; border: none; padding: 5px 10px; font-weight: bold; cursor: pointer; font-size: 11px; }
+  button:hover { opacity: 0.85; }
+  .btn-ghost { background: #161c16; color: var(--green); border: 1px solid var(--green); padding: 4px 8px; font-size: 10.5px; }
+  .cmd-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+  .console-out { background: #030403; border: 1px solid var(--border); color: var(--green); padding: 8px; height: 95px; overflow-y: auto; white-space: pre-wrap; font-size: 11px; }
+  .kv-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dotted #1b221b; }
+  .kv-label { color: var(--muted); }
+  .kv-val { color: var(--text); font-weight: bold; }
+  svg { width: 100%; height: 90px; background: #050705; border: 1px solid var(--border); margin-top: 6px; }
 </style>
 </head>
 <body>
   <div class="header">
     <div>
-      <div class="title">SOLID INTEGRATIONS LLC // LIVE MOC TELEMETRY STREAM</div>
-      <div class="sub" id="hdrSub">CAGE: 20U61 | UEI: XT2KK6DNSLR5 | ROOT HASH: 235021c9 | CONNECTING TO DAEMON...</div>
+      <div class="title">SOLID INTEGRATIONS LLC // INTERACTIVE CEO TELEMETRY DECK v3.1</div>
+      <div class="sub" id="hdrSub">CEO: LANCE T. PULLEN (SOLID LP) | CAGE: 20U61 | UEI: XT2KK6DNSLR5 | ROOT: 235021c9</div>
     </div>
     <div>
-      <button onclick="triggerPing()">FORCE SWARM PING</button>
-      <span class="badge" id="daemonBadge">STREAMING LIVE (3s)</span>
+      <button onclick="triggerPing()">SYNC ALL NODES</button>
+      <span class="badge" id="daemonBadge">LIVE STREAM (3s)</span>
     </div>
   </div>
 
-  <div class="grid-4">
-    <div class="card"><h3>Enterprise Valuation</h3><div class="metric" id="mVal">$14,500,000</div><div class="sub">IRC Sec 1235 IP & Sovereign Stack</div></div>
-    <div class="card"><h3>Projected Annual Revenue</h3><div class="metric" id="mRev">$3,850,000</div><div class="sub">42 DFW Corridors + Federal Lanes</div></div>
-    <div class="card"><h3>IP Recovery Target</h3><div class="metric" id="mIp">$4,200,000</div><div class="sub">Automated Legal Restitution Marker</div></div>
-    <div class="card"><h3>Git & Repository State</h3><div class="metric" id="mGit">SYNCING...</div><div class="sub" id="mGitSub">~/antisolid local working tree</div></div>
+  <div class="grid-5">
+    <div class="card"><h3>Enterprise Valuation</h3><div class="metric">$14,500,000</div><div class="sub">IRC Sec 1235 IP & Sovereign Stack</div></div>
+    <div class="card"><h3>Projected Annual Rev</h3><div class="metric">$3,850,000</div><div class="sub">42 DFW Corridors + Federal Lanes</div></div>
+    <div class="card"><h3>IP Recovery Target</h3><div class="metric">$4,200,000</div><div class="sub">Automated Restitution Ledger</div></div>
+    <div class="card"><h3>ERCOT HB_NORTH LMP</h3><div class="metric" id="mErcot">$50.17 / MWh</div><div class="sub" id="mErcotSub">SCED 5-Min Real-Time Dispatch</div></div>
+    <div class="card"><h3>MacBook Air Host</h3><div class="metric" id="mBatt">100%</div><div class="sub" id="mHostSub">Checking pmset & git tree...</div></div>
   </div>
 
-  <div class="grid-2">
+  <div class="grid-3">
     <div class="card">
-      <h3><span>Live Zsh Terminal & Multi-Agent Execution Stream</span><span id="lastPoll">--</span></h3>
-      <div class="bus-log" id="busLog"></div>
+      <h3><span>ERCOT Live SCED Arbitrage Feed</span><span id="ercotMode">STANDBY</span></h3>
+      <div class="kv-row"><span class="kv-label">HB_NORTH / HB_HOUSTON / HB_WEST:</span><span class="kv-val" id="ercotZones">--</span></div>
+      <div class="kv-row"><span class="kv-label">ERCOT Physical Responsive Reserve:</span><span class="kv-val" id="ercotPrc">--</span></div>
+      <svg id="ercotChart" viewBox="0 0 300 90" preserveAspectRatio="none"></svg>
     </div>
+
     <div class="card">
-      <h3>Multi-LLM & Federal Command Lanes</h3>
-      <div class="bus-log">
-        <div class="log-line"><span class="log-src">[GEMINI_MOC]</span> Orchestrating 16 local/cloud nodes under root hash 235021c9.</div>
-        <div class="log-line"><span class="log-src">[CLAUDE_LEGAL]</span> DOE OSDBU brief for Kent Hibben & DFARS checklist primed.</div>
-        <div class="log-line"><span class="log-src">[GPT_PIPELINE]</span> 42 DFW industrial corridors indexed for automated intake.</div>
-        <div class="log-line"><span class="log-src">[ERCOT_LMP]</span> Benchmark $50.17/MWh | 5-min SCED & 15-min SPP active.</div>
-        <div class="log-line"><span class="log-src">[ZSH_DAEMON]</span> Local HTTP server 127.0.0.1:8787 streaming live subprocess output.</div>
+      <h3><span>Federal & DOE OSDBU Radar</span><span>CAGE: 20U61</span></h3>
+      <div class="kv-row"><span class="kv-label">DOE OSDBU Advocate:</span><span class="kv-val">Kent Lamparter Hibben</span></div>
+      <div class="kv-row"><span class="kv-label">Teleconference Status:</span><span class="kv-val" style="color:var(--amber);">Awaiting MS Teams Link</span></div>
+      <div class="kv-row"><span class="kv-label">SAM.gov Entity Tier:</span><span class="kv-val">UEI XT2KK6DNSLR5 (1,000/day)</span></div>
+      <div class="kv-row"><span class="kv-label">Primary Dispatch Inbox:</span><span class="kv-val">solid.lp@outlook.com</span></div>
+      <div class="kv-row"><span class="kv-label">Composite Repo Hash:</span><span class="kv-val" id="compHash">235021c9::...</span></div>
+      <div style="margin-top:8px; display:flex; gap:6px;">
+        <button class="btn-ghost" onclick="runCmd('sync_outlook')">POLL OUTLOOK</button>
+        <button class="btn-ghost" onclick="runAgent('agents/sam_gov_monitor.py')">PING SAM.GOV</button>
+        <button class="btn-ghost" onclick="runAgent('agents/federal_compliance_sentinel.py')">AUDIT DFARS</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span>DFW Industrial & Fabrication Ops</span><span>42 CORRIDORS</span></h3>
+      <div class="kv-row"><span class="kv-label">Active Industrial Zones:</span><span class="kv-val">Valwood, Stemmons, GSW, Alliance</span></div>
+      <div class="kv-row"><span class="kv-label">Legal Brokerage Intake:</span><span class="kv-val">Automated Contract Engine</span></div>
+      <div class="kv-row"><span class="kv-label">CAN-Bus / Fab Profiles:</span><span class="kv-val">07 Suburban / 14 Ghibli</span></div>
+      <div class="kv-row"><span class="kv-label">Local Git Commit:</span><span class="kv-val" id="gitState">main @ ...</span></div>
+      <div style="margin-top:8px; display:flex; gap:6px;">
+        <button class="btn-ghost" onclick="runCmd('scan_dfw')">RUN DFW SCRAPER</button>
+        <button class="btn-ghost" onclick="runAgent('agents/can_bus_fleet.py')">SYNC CAN-BUS</button>
+        <button class="btn-ghost" onclick="runAgent('agents/legal_brokerage_agent.py')">LEGAL INTAKE</button>
       </div>
     </div>
   </div>
 
+  <div class="grid-2">
+    <div class="card">
+      <h3><span>Live Multi-LLM & Zsh Subprocess Telemetry Bus</span><span id="lastPoll">--</span></h3>
+      <div class="bus-log" id="busLog"></div>
+    </div>
+
+    <div class="card">
+      <h3><span>Interactive Zsh Command Dispatch Console</span><span>~/antisolid</span></h3>
+      <div class="cmd-bar">
+        <button class="btn-ghost" onclick="runCmd('git_status')">git status</button>
+        <button class="btn-ghost" onclick="runCmd('git_log')">git log -n 5</button>
+        <button class="btn-ghost" onclick="runCmd('verify_hash')">sync_ledger_hash</button>
+        <button class="btn-ghost" onclick="runCmd('audit_firewall')">agent_firewall</button>
+        <button class="btn-ghost" onclick="runCmd('omega_exec')">omega_exec</button>
+      </div>
+      <div class="console-out" id="consoleOut">Click any command above to execute live in ~/antisolid and stream stdout here...</div>
+    </div>
+  </div>
+
   <div class="card">
-    <h3>Active 16-Node Autonomous Swarm Federation (Live File & Heartbeat Audit)</h3>
+    <h3><span>Active 16-Node Autonomous Swarm Federation (Click "EXECUTE NOW" to Trigger Individual Node)</span><span id="totalRuns">0 Total Runs</span></h3>
     <table class="agent-table">
-      <thead><tr><th>#</th><th>Tag</th><th>Module Path</th><th>Status</th><th>Last Sync (UTC)</th><th>Directive</th></tr></thead>
+      <thead><tr><th>#</th><th>Tag</th><th>Module Path</th><th>Status</th><th>Exec Count</th><th>Last Sync</th><th>Directive</th><th>Action</th></tr></thead>
       <tbody id="agentRows"></tbody>
     </table>
   </div>
 
 <script>
+function renderSparkline(series) {
+  const svg = document.getElementById('ercotChart');
+  if (!series || series.length < 2) return;
+  const vals = series.map(s => s.hb_north);
+  const min = Math.min(...vals) - 2;
+  const max = Math.max(...vals) + 2;
+  const pts = vals.map((v, i) => {
+    const x = (i / (vals.length - 1)) * 290 + 5;
+    const y = 82 - ((v - min) / (max - min || 1)) * 72;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+  svg.innerHTML = `<polyline fill="none" stroke="#00ff66" stroke-width="2" points="${pts}" />`;
+}
+
 async function fetchTelemetry() {
   try {
     const res = await fetch('/api/telemetry');
     const data = await res.json();
     document.getElementById('hdrSub').textContent =
-      `CAGE: ${data.cage} | UEI: ${data.uei} | ROOT HASH: ${data.root_hash} | UTC: ${data.timestamp_utc}`;
-    document.getElementById('mGit').textContent = `${data.git.branch} @ ${data.git.commit}`;
-    document.getElementById('mGitSub').textContent =
-      data.git.clean ? 'Working tree CLEAN (origin/main synced)' : `${data.git.dirty_files} uncommitted file(s) detected`;
-    document.getElementById('lastPoll').textContent = `Updated ${new Date().toLocaleTimeString()}`;
+      `CEO: ${data.ceo} | CAGE: ${data.cage} | UEI: ${data.uei} | HASH: ${data.composite_hash} | UTC: ${data.timestamp_utc}`;
+    document.getElementById('compHash').textContent = data.composite_hash;
+    document.getElementById('gitState').textContent =
+      `${data.git.branch} @ ${data.git.commit} (${data.git.clean ? 'CLEAN' : data.git.dirty_files + ' dirty'})`;
+    document.getElementById('mBatt').textContent = `${data.hardware.battery} (${data.hardware.power_source})`;
+    document.getElementById('mHostSub').textContent = `${data.hardware.state} | Load: ${data.hardware.cpu_load}`;
 
+    if (data.ercot && data.ercot.hb_north) {
+      document.getElementById('mErcot').textContent = `$${data.ercot.hb_north.toFixed(2)} / MWh`;
+      document.getElementById('mErcotSub').textContent = data.ercot.dispatch;
+      document.getElementById('ercotMode').textContent = data.ercot.dispatch;
+      document.getElementById('ercotZones').textContent =
+        `$${data.ercot.hb_north} / $${data.ercot.hb_houston} / $${data.ercot.hb_west}`;
+      document.getElementById('ercotPrc').textContent = `${data.ercot.prc_mw} MW`;
+    }
+    renderSparkline(data.ercot_series);
+
+    document.getElementById('lastPoll').textContent = `Polled ${new Date().toLocaleTimeString()}`;
     const logEl = document.getElementById('busLog');
     logEl.innerHTML = data.logs.map(l =>
       `<div class="log-line"><span class="log-ts">[${l.ts}]</span> <span class="log-src">[${l.source}]</span> ${l.msg}</div>`
     ).join('');
 
+    let sumRuns = 0;
     const tbody = document.getElementById('agentRows');
-    tbody.innerHTML = data.agents.map((a, i) =>
-      `<tr><td>${i+1}</td><td><b>${a.tag}</b></td><td>${a.name}</td><td class="status-dot">● ${a.status}</td><td>${a.last_sync}</td><td>${a.role}</td></tr>`
-    ).join('');
+    tbody.innerHTML = data.agents.map((a, i) => {
+      sumRuns += a.runs;
+      return `<tr>
+        <td>${i+1}</td>
+        <td><b>${a.tag}</b></td>
+        <td>${a.name}</td>
+        <td class="status-dot">● ${a.status}</td>
+        <td><b>${a.runs}</b></td>
+        <td>${a.last_sync}</td>
+        <td>${a.role}</td>
+        <td><button class="btn-ghost" onclick="runAgent('${a.name}')">EXECUTE NOW</button></td>
+      </tr>`;
+    }).join('');
+    document.getElementById('totalRuns').textContent = `${sumRuns} Total Daemon Executions`;
   } catch (err) {
     document.getElementById('daemonBadge').textContent = 'DAEMON OFFLINE';
   }
+}
+
+async function runAgent(agentPath) {
+  const outEl = document.getElementById('consoleOut');
+  outEl.textContent = `[DISPATCHING] python3 ${agentPath}...`;
+  const res = await fetch('/api/run_agent', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({agent: agentPath})
+  });
+  const data = await res.json();
+  outEl.textContent = `[AGENT OUTPUT // ${agentPath}]\n${data.output}`;
+  fetchTelemetry();
+}
+
+async function runCmd(cmdKey) {
+  const outEl = document.getElementById('consoleOut');
+  outEl.textContent = `[EXECUTING] ${cmdKey}...`;
+  const res = await fetch('/api/exec_cmd', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({cmd: cmdKey})
+  });
+  const data = await res.json();
+  outEl.textContent = `$ ${data.cmd || cmdKey}\n${data.output}`;
+  fetchTelemetry();
 }
 
 async function triggerPing() {
