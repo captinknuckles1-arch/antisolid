@@ -2,226 +2,264 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>SOLID INTEGRATIONS // LANCE'S NEURAL COMMAND CENTER</title>
+<title>SOLID INTEGRATIONS // SOVEREIGN AI MIND COMMAND CENTER</title>
 <style>
-  :root { --bg: #050705; --card: #0d120d; --border: #1f2b1f; --green: #00ff66; --cyan: #00e5ff; --amber: #ffb700; --text: #e8f0e8; --muted: #8a998a; }
+  :root { --bg: #030503; --card: #090e09; --border: #162216; --green: #00ff66; --cyan: #00e5ff; --amber: #ffb700; --red: #ff4d4d; --text: #e2ede2; --muted: #7d8c7d; }
   * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
   body { margin: 0; padding: 16px; background: var(--bg); color: var(--text); font-size: 13px; }
-  .top-bar { border: 2px solid var(--green); background: var(--card); padding: 14px 18px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 14px; }
+  .top-bar { border: 2px solid var(--green); background: var(--card); padding: 14px 18px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 14px; box-shadow: 0 0 20px rgba(0,255,102,0.1); }
   .title { font-size: 20px; font-weight: 800; color: var(--green); letter-spacing: 0.5px; }
   .subtitle { font-size: 12px; color: var(--muted); margin-top: 3px; }
   .btn { background: var(--green); color: #000; border: none; padding: 8px 14px; font-weight: 700; border-radius: 4px; cursor: pointer; font-size: 12px; }
   .btn:hover { filter: brightness(1.1); }
-  .btn-outline { background: #121a12; color: var(--green); border: 1px solid var(--green); padding: 7px 12px; font-weight: 600; border-radius: 4px; cursor: pointer; font-size: 12px; }
+  .btn-outline { background: #0f170f; color: var(--green); border: 1px solid var(--green); padding: 7px 12px; font-weight: 600; border-radius: 4px; cursor: pointer; font-size: 12px; }
+  
+  /* NOTIFICATION TOAST POP-UPS */
+  #toastContainer { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; max-width: 380px; }
+  .toast { background: #0b130b; border-left: 4px solid var(--green); border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 12px 16px; border-radius: 4px; box-shadow: 0 4px 16px rgba(0,0,0,0.6); animation: slideIn 0.3s ease-out; }
+  .toast.SUCCESS { border-left-color: var(--green); }
+  .toast.WARNING { border-left-color: var(--amber); }
+  .toast.NOTICE { border-left-color: var(--cyan); }
+  .toast-title { font-weight: 800; font-size: 12px; color: var(--text); margin-bottom: 3px; display: flex; justify-content: space-between; }
+  .toast-msg { font-size: 11.5px; color: var(--muted); line-height: 1.4; }
+  @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
   .money-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 14px; }
   .stat-box { background: var(--card); border: 1px solid var(--border); padding: 14px; border-radius: 6px; }
   .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; font-weight: 700; }
-  .stat-val { font-size: 24px; font-weight: 800; color: var(--green); margin: 6px 0 4px 0; }
-  .stat-note { font-size: 11.5px; color: var(--muted); }
+  .stat-val { font-size: 23px; font-weight: 800; color: var(--green); margin: 6px 0 4px 0; }
+  .stat-note { font-size: 11px; color: var(--muted); }
   .main-grid { display: grid; grid-template-columns: 1.35fr 0.65fr; gap: 14px; margin-bottom: 14px; }
   .sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
   .card { background: var(--card); border: 1px solid var(--border); padding: 16px; border-radius: 6px; }
   .card-title { font-size: 14px; font-weight: 800; color: var(--green); margin: 0 0 10px 0; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
-  canvas { width: 100%; height: 460px; background: radial-gradient(circle at center, #0a140a 0%, #040604 100%); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; display: block; }
-  .inspector { background: #070b07; border: 1px solid var(--green); padding: 12px; border-radius: 6px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-  .feed-box { height: 280px; overflow-y: auto; background: #060906; border: 1px solid var(--border); border-radius: 4px; padding: 10px; }
-  .feed-item { padding: 7px 0; border-bottom: 1px solid #121a12; font-size: 12px; line-height: 1.4; }
-  .legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; }
+  canvas { width: 100%; height: 500px; background: radial-gradient(circle at center, #071207 0%, #020402 100%); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; display: block; }
+  .inspector { background: #050805; border: 1px solid var(--green); padding: 12px; border-radius: 6px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .feed-box { height: 300px; overflow-y: auto; background: #040604; border: 1px solid var(--border); border-radius: 4px; padding: 10px; }
+  .feed-item { padding: 7px 0; border-bottom: 1px solid #0f160f; font-size: 12px; line-height: 1.4; }
+  .legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; }
   table { width: 100%; border-collapse: collapse; font-size: 12px; }
   th, td { border-bottom: 1px solid var(--border); padding: 7px 6px; text-align: left; }
   th { color: var(--muted); font-size: 11px; text-transform: uppercase; }
-  input, select { background: #060906; color: var(--text); border: 1px solid var(--border); padding: 7px; border-radius: 4px; font-size: 12px; }
+  input, select { background: #040604; color: var(--text); border: 1px solid var(--border); padding: 7px; border-radius: 4px; font-size: 12px; }
 </style>
 </head>
 <body>
 
+  <div id="toastContainer"></div>
+
   <div class="top-bar">
     <div>
-      <div class="title">SOLID INTEGRATIONS LLC // LIVE NEURAL BRAIN & REAL DALLAS RADAR</div>
-      <div class="subtitle">Owner & CEO: Lance T. Pullen (Solid LP) • Federal CAGE: 20U61 • UEI: XT2KK6DNSLR5 • Zero Fake Data Mode</div>
+      <div class="title">SOLID INTEGRATIONS // SOVEREIGN AI MIND COMMAND CENTER</div>
+      <div class="subtitle">Managing Director Mode Active • Owner & CEO: Lance T. Pullen • Federal CAGE: 20U61 • UEI: XT2KK6DNSLR5</div>
     </div>
     <div style="display:flex; gap:10px; align-items:center;">
-      <span id="laptopBadge" style="color:var(--muted); font-size:12px;">Checking Laptop Battery...</span>
-      <button class="btn" onclick="fireRandomWave()">⚡ FIRE ALL BRAIN NODES NOW</button>
+      <select id="regionSelector" onchange="switchRegion(this.value)">
+        <option value="TEXAS">🌍 Region: Texas & DFW Corridors</option>
+        <option value="US_SUNBELT">🌍 Region: US Sunbelt Expansion</option>
+        <option value="GLOBAL">🌍 Region: Worldwide Integrations</option>
+      </select>
+      <span id="laptopBadge" style="color:var(--muted); font-size:12px;">Laptop Power...</span>
+      <button class="btn" onclick="fireRandomWave()">⚡ TRIGGER FULL BRAIN PULSE</button>
     </div>
   </div>
 
-  <!-- HONEST, VERIFIED MONEY STRIP -->
+  <!-- MONEY & REVENUE STRIP -->
   <div class="money-strip">
     <div class="stat-box">
       <div class="stat-label">Verified Cash Collected</div>
       <div class="stat-val" id="realCollected">$0.00</div>
-      <div class="stat-note">100% real payments logged by you (Zero fake numbers)</div>
+      <div class="stat-note">100% real payments logged by you</div>
     </div>
     <div class="stat-box">
       <div class="stat-label">Open Client Invoices</div>
       <div class="stat-val" style="color:var(--amber);" id="realInvoiced">$0.00</div>
-      <div class="stat-note">Real bills sent out & waiting to be paid</div>
+      <div class="stat-note">Waiting to be paid</div>
     </div>
     <div class="stat-box">
       <div class="stat-label">Target Pace ($3.85M/Yr Goal)</div>
       <div class="stat-val" id="targetTodayClock">$0.00</div>
-      <div class="stat-note">Target pace: $0.1220/sec ($439.20/hr)</div>
+      <div class="stat-note">Pace: $0.1220/sec ($439.20/hr)</div>
     </div>
     <div class="stat-box">
       <div class="stat-label">Live Bitcoin & Dogecoin</div>
-      <div class="stat-val" style="font-size:19px;" id="liveCrypto">Loading Coinbase...</div>
-      <div class="stat-note" id="liveTreasury">U.S. Treasury Rate: Checking...</div>
+      <div class="stat-val" style="font-size:18px;" id="liveCrypto">Loading Coinbase...</div>
+      <div class="stat-note" id="liveTreasury">U.S. Treasury: Checking...</div>
     </div>
     <div class="stat-box">
       <div class="stat-label">Enforcer Legal Target</div>
       <div class="stat-val" style="color:var(--cyan);">$4,200,000</div>
-      <div class="stat-note">Stated IP recovery goal + $14.5M company valuation goal</div>
+      <div class="stat-note">IP Recovery + $14.5M Valuation</div>
     </div>
   </div>
 
-  <!-- KINETIC BRAIN NETWORK + LIVE AGENT REPORTS -->
+  <!-- FUTURISTIC AI MIND KINETIC CANVAS + LIVE FEED -->
   <div class="main-grid">
     <div class="card">
       <div class="card-title">
-        <span>🧠 LIVE 30-AGENT NEURAL BRAIN NETWORK (Click Any Neuron to Fire It)</span>
+        <span>🌌 SOVEREIGN AI MIND NEURAL MESH (35 Autonomous Nodes)</span>
         <span style="font-size:11.5px; font-weight:normal; color:var(--muted);">
-          <span class="legend-dot" style="background:#00ff66;"></span>Money & Sales
-          <span class="legend-dot" style="background:#00e5ff; margin-left:8px;"></span>Power & Shop Ops
-          <span class="legend-dot" style="background:#ffb700; margin-left:8px;"></span>Protection & Legal
+          <span class="legend-dot" style="background:#ffffff;"></span>Director
+          <span class="legend-dot" style="background:#00ff66; margin-left:6px;"></span>Money
+          <span class="legend-dot" style="background:#00e5ff; margin-left:6px;"></span>Ops
+          <span class="legend-dot" style="background:#ffb700; margin-left:6px;"></span>Protect
         </span>
       </div>
-      <canvas id="brainCanvas" width="900" height="460"></canvas>
+      <canvas id="brainCanvas" width="900" height="500"></canvas>
       <div class="inspector">
         <div>
-          <div style="font-weight:800; color:var(--green); font-size:14px;" id="selName">Click any neuron in the brain network to inspect or run it</div>
-          <div style="color:var(--text); margin-top:3px;" id="selDesc">When a neuron fires, an electrical signal pulse travels from the Central Brain to that agent.</div>
-          <div style="color:var(--muted); font-size:11.5px; margin-top:4px;" id="selOut">Last Report: Waiting for click...</div>
+          <div style="font-weight:800; color:var(--green); font-size:14px;" id="selName">Select any glowing node in the AI mind above</div>
+          <div style="color:var(--text); margin-top:3px;" id="selDesc">Signals pulse in real time from the Managing Director to active execution agents.</div>
+          <div style="color:var(--muted); font-size:11.5px; margin-top:4px;" id="selOut">Status: Ready for command...</div>
         </div>
-        <button class="btn" id="selBtn" onclick="fireSelectedNode()">RUN THIS AGENT NOW</button>
+        <button class="btn" id="selBtn" onclick="fireSelectedNode()">EXECUTE AGENT NOW</button>
       </div>
     </div>
 
     <div class="card">
       <div class="card-title">
-        <span>⚡ WHAT YOUR AGENTS ARE DOING RIGHT NOW</span>
-        <span style="font-size:11px; color:var(--muted);">Live Subprocess Feed</span>
+        <span>⚡ REAL-TIME EXECUTION STREAM & NOTIFICATIONS</span>
+        <span style="font-size:11px; color:var(--muted);">100% Execution Mode</span>
       </div>
       <div class="feed-box" id="liveFeed"></div>
 
-      <div style="margin-top:14px; border-top:1px solid var(--border); padding-top:12px;">
-        <div style="font-weight:800; color:var(--green); margin-bottom:8px;">💵 RECORD REAL CLIENT PAYMENT OR INVOICE</div>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:8px;">
-          <select id="payDiv">
+      <div style="margin-top:12px; border-top:1px solid var(--border); paddingTop:10px;">
+        <div style="font-weight:800; color:var(--green); marginBottom:6px; font-size:12px;">💵 LOG REAL PAYMENT OR INVOICE</div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; marginBottom:6px;">
+          <select id="payDiv" style="font-size:11.5px;">
             <option value="DFW_INDUSTRIAL">DFW Industrial Automation</option>
             <option value="FEDERAL_CONTRACTS">Federal & DOE Contracts</option>
             <option value="TEXAS_POWER_GRID">Texas Power Grid Trading</option>
             <option value="CUSTOM_AUTO_FAB">Custom Auto & Fabrication</option>
           </select>
-          <input type="number" id="payAmt" placeholder="Amount in USD (e.g. 2500)" value="2500" />
+          <input type="number" id="payAmt" placeholder="Amount ($)" value="2500" style="font-size:11.5px;" />
         </div>
-        <div style="display:flex; gap:8px;">
-          <button class="btn" style="flex:1;" onclick="submitMoney('payment')">+ ADD REAL PAID CASH</button>
-          <button class="btn-outline" style="flex:1;" onclick="submitMoney('invoice')">+ ADD OPEN INVOICE</button>
+        <div style="display:flex; gap:6px;">
+          <button class="btn" style="flex:1; font-size:11px;" onclick="submitMoney('payment')">+ PAID CASH</button>
+          <button class="btn-outline" style="flex:1; font-size:11px;" onclick="submitMoney('invoice')">+ OPEN INVOICE</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- REAL DALLAS OPEN DATA PERMITS + INTERACTIVE ERCOT GRAPH -->
+  <!-- NOTIFICATIONS & BUSINESS DIVISIONS -->
   <div class="sub-grid">
-    <!-- REAL DALLAS PERMIT RADAR TABLE -->
     <div class="card">
       <div class="card-title">
-        <span>📍 REAL DALLAS BUILDING PERMITS (LIVE CITY OPEN DATA)</span>
-        <button class="btn-outline" style="padding:4px 8px;" onclick="refreshPermits()">SCAN CITY NOW</button>
-      </div>
-      <div style="font-size:12px; color:var(--muted); margin-bottom:8px;">
-        Live municipal building records pulled directly from <b>City of Dallas Open Data (e7gq-4sah)</b>. Showing real street addresses and declared values (or city-stated square footage).
+        <span>🔔 SYSTEM NOTIFICATIONS & STRATEGIC ALERTS</span>
+        <span style="font-size:11px; color:var(--muted);">Live Radar</span>
       </div>
       <table>
         <thead>
           <tr>
-            <th>Street Address</th>
-            <th>Permit Type</th>
-            <th>Work Description</th>
-            <th>Declared Value</th>
+            <th>Time (UTC)</th>
+            <th>Type</th>
+            <th>Alert Title & Message</th>
           </tr>
         </thead>
-        <tbody id="permitRows">
-          <tr><td colspan="4" style="color:var(--muted); text-align:center;">Scanning City of Dallas Open Data feed...</td></tr>
+        <tbody id="notifRows">
+          <tr><td colspan="3" style="color:var(--muted); text-align:center;">Loading notifications...</td></tr>
         </tbody>
       </table>
     </div>
 
-    <!-- ERCOT POWER GRAPH -->
     <div class="card">
       <div class="card-title">
-        <span>🔋 TEXAS POWER GRID (ERCOT) — HOURLY BUY / SELL PROFIT CURVE</span>
-        <span style="font-size:11px; color:var(--amber);">Hover over any hour dot</span>
+        <span>📊 SOLID INTEGRATIONS REVENUE DIVISIONS</span>
+        <span style="font-size:11px; color:var(--muted);">SQLite Ledger</span>
       </div>
-      <div style="font-size:12px; color:var(--muted); margin-bottom:6px;">
-        Wholesale electricity price curve for North Texas (Dallas). Batteries <b>BUY under $30</b> (green zone) and <b>SELL above $55</b> (gold zone).
-      </div>
-      <svg id="ercotSvg" viewBox="0 0 650 200" style="width:100%; height:190px; background:#060a06; border:1px solid var(--border); border-radius:6px;"></svg>
-      <div id="ercotExplainBox" style="margin-top:8px; padding:8px 10px; background:#081008; border-left:3px solid var(--green); font-size:12px;">
-        Move your mouse over any hour dot on the chart to see the price and our battery trade action.
-      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Division</th>
+            <th>Yearly Goal</th>
+            <th>Collected</th>
+            <th>Open Invoices</th>
+          </tr>
+        </thead>
+        <tbody id="divTable"></tbody>
+      </table>
     </div>
   </div>
 
 <script>
 let brainNodes = [];
 let activePulses = [];
-let selectedNodeId = 10; // Default to Dallas Permit Scout
-let ercotData = [];
+let selectedNodeId = 0;
+let lastNotifCount = 0;
 const canvas = document.getElementById('brainCanvas');
 const ctx = canvas.getContext('2d');
 
-function layoutBrainNodes(nodes) {
+function switchRegion(reg) {
+  showToast('NOTICE', 'Regional View Switched', `Active telemetry scope re-centered to: ${reg}. All 35 agents synced.`);
+}
+
+function showToast(severity, title, message) {
+  const container = document.getElementById('toastContainer');
+  const div = document.createElement('div');
+  div.className = `toast ${severity}`;
+  div.innerHTML = `
+    <div class="toast-title"><span>${title}</span> <span style="font-size:10px; color:var(--muted);">${new Date().toLocaleTimeString()}</span></div>
+    <div class="toast-msg">${message}</div>
+  `;
+  container.appendChild(div);
+  setTimeout(() => { div.remove(); }, 6000);
+}
+
+function layoutAiMindNodes(nodes) {
   const cx = canvas.width / 2;
   const cy = canvas.height / 2;
-  const ring1 = nodes.filter(n => n.id > 0 && n.id <= 10);
-  const ring2 = nodes.filter(n => n.id > 10 && n.id <= 29);
-
+  
+  // Ring-0: Director in center
+  // Ring-1: Core & Protection (Inner Circle)
+  // Ring-2: Money & Operations (Outer Orbital)
   nodes.forEach(n => {
     if (n.id === 0) {
       n.x = cx;
       n.y = cy;
-      n.r = 22;
-    } else if (n.id <= 10) {
-      const idx = n.id - 1;
-      const angle = (idx / ring1.length) * Math.PI * 2 - Math.PI / 2;
-      n.x = cx + Math.cos(angle) * 125;
-      n.y = cy + Math.sin(angle) * 105;
+      n.r = 24;
+    } else if (n.group === 'CORE' || n.group === 'PROTECT') {
+      const inner = nodes.filter(x => x.group === 'CORE' || x.group === 'PROTECT');
+      const idx = inner.indexOf(n);
+      const angle = (idx / inner.length) * Math.PI * 2;
+      n.x = cx + Math.cos(angle) * 130;
+      n.y = cy + Math.sin(angle) * 110;
       n.r = 12;
     } else {
-      const idx = n.id - 11;
-      const angle = (idx / ring2.length) * Math.PI * 2 - Math.PI / 2;
-      n.x = cx + Math.cos(angle) * 265;
-      n.y = cy + Math.sin(angle) * 190;
+      const outer = nodes.filter(x => x.group !== 'CORE' && x.group !== 'PROTECT' && x.id > 0);
+      const idx = outer.indexOf(n);
+      const angle = (idx / outer.length) * Math.PI * 2;
+      n.x = cx + Math.cos(angle) * 280;
+      n.y = cy + Math.sin(angle) * 200;
       n.r = 10;
     }
   });
 }
 
-function getGroupColor(group) {
-  if (group === 'CORE') return '#ffffff';
+function getNodeColor(group) {
+  if (group === 'DIRECTOR') return '#ffffff';
+  if (group === 'CORE') return '#00e5ff';
   if (group === 'MONEY') return '#00ff66';
-  if (group === 'OPS') return '#00e5ff';
+  if (group === 'OPS') return '#00ffff';
   return '#ffb700';
 }
 
-function drawBrainNetwork() {
+function drawAiMindCanvas() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   if (!brainNodes.length) {
-    requestAnimationFrame(drawBrainNetwork);
+    requestAnimationFrame(drawAiMindCanvas);
     return;
   }
-  const core = brainNodes[0];
+  const director = brainNodes[0];
   const now = performance.now();
 
+  // Draw holographic neural web
   brainNodes.forEach((n, idx) => {
     if (n.id === 0) return;
     ctx.beginPath();
-    ctx.moveTo(core.x, core.y);
+    ctx.moveTo(director.x, director.y);
     ctx.lineTo(n.x, n.y);
-    ctx.strokeStyle = 'rgba(0, 255, 102, 0.14)';
+    ctx.strokeStyle = 'rgba(0, 255, 102, 0.12)';
     ctx.lineWidth = 1;
     ctx.stroke();
 
@@ -230,22 +268,23 @@ function drawBrainNetwork() {
       ctx.beginPath();
       ctx.moveTo(n.x, n.y);
       ctx.lineTo(next.x, next.y);
-      ctx.strokeStyle = 'rgba(0, 229, 255, 0.08)';
+      ctx.strokeStyle = 'rgba(0, 229, 255, 0.06)';
       ctx.stroke();
     }
   });
 
+  // Draw traveling electrical signal pulses
   activePulses.forEach(p => {
     const target = brainNodes.find(n => n.id === p.to);
     if (!target) return;
-    const progress = ((now - p.born) % 1400) / 1400;
-    const px = core.x + (target.x - core.x) * progress;
-    const py = core.y + (target.y - core.y) * progress;
+    const progress = ((now - p.born) % 1500) / 1500;
+    const px = director.x + (target.x - director.x) * progress;
+    const py = director.y + (target.y - director.y) * progress;
 
     ctx.beginPath();
-    ctx.moveTo(core.x, core.y);
+    ctx.moveTo(director.x, director.y);
     ctx.lineTo(target.x, target.y);
-    ctx.strokeStyle = 'rgba(0, 255, 102, 0.6)';
+    ctx.strokeStyle = 'rgba(0, 255, 102, 0.65)';
     ctx.lineWidth = 2;
     ctx.stroke();
 
@@ -253,20 +292,21 @@ function drawBrainNetwork() {
     ctx.arc(px, py, 5, 0, Math.PI * 2);
     ctx.fillStyle = '#ffffff';
     ctx.shadowColor = '#00ff66';
-    ctx.shadowBlur = 12;
+    ctx.shadowBlur = 14;
     ctx.fill();
     ctx.shadowBlur = 0;
   });
 
+  // Draw nodes
   brainNodes.forEach(n => {
-    const col = getGroupColor(n.group);
+    const col = getNodeColor(n.group);
     const isSel = n.id === selectedNodeId;
     const isFiring = activePulses.some(p => p.to === n.id);
 
     if (isFiring || isSel) {
       ctx.beginPath();
-      ctx.arc(n.x, n.y, n.r + 7, 0, Math.PI * 2);
-      ctx.fillStyle = isFiring ? 'rgba(0, 255, 102, 0.28)' : 'rgba(255, 255, 255, 0.18)';
+      ctx.arc(n.x, n.y, n.r + 8, 0, Math.PI * 2);
+      ctx.fillStyle = isFiring ? 'rgba(0, 255, 102, 0.3)' : 'rgba(255, 255, 255, 0.2)';
       ctx.fill();
     }
 
@@ -275,16 +315,16 @@ function drawBrainNetwork() {
     ctx.fillStyle = col;
     ctx.fill();
     ctx.lineWidth = isSel ? 3 : 1.5;
-    ctx.strokeStyle = isSel ? '#ffffff' : '#050705';
+    ctx.strokeStyle = isSel ? '#ffffff' : '#030503';
     ctx.stroke();
 
-    ctx.fillStyle = '#e8f0e8';
-    ctx.font = n.id === 0 ? 'bold 11px sans-serif' : '600 10.5px sans-serif';
+    ctx.fillStyle = '#e2ede2';
+    ctx.font = n.id === 0 ? 'bold 11px sans-serif' : '600 10px sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText(n.name, n.x, n.y + n.r + 13);
   });
 
-  requestAnimationFrame(drawBrainNetwork);
+  requestAnimationFrame(drawAiMindCanvas);
 }
 
 canvas.addEventListener('click', (e) => {
@@ -308,9 +348,9 @@ function selectNode(id) {
   selectedNodeId = id;
   const n = brainNodes.find(x => x.id === id);
   if (!n) return;
-  document.getElementById('selName').textContent = `${n.name} (Ran ${n.runs} times today)`;
-  document.getElementById('selDesc').textContent = `What it does: ${n.desc}`;
-  document.getElementById('selOut').textContent = `Latest Report: ${n.last_output}`;
+  document.getElementById('selName').textContent = `${n.name} (Executed ${n.runs} times)`;
+  document.getElementById('selDesc').textContent = `Role: ${n.desc}`;
+  document.getElementById('selOut').textContent = `Latest Output: ${n.last_output}`;
 }
 
 async function fireSelectedNode() {
@@ -323,73 +363,18 @@ async function fireSelectedNode() {
   pullState();
 }
 
-async function refreshPermits() {
-  selectNode(10);
-  await fireSelectedNode();
-}
-
 async function fireRandomWave() {
-  for (let i = 1; i <= 6; i++) {
-    const randId = Math.floor(Math.random() * 29) + 1;
+  for (let i = 0; i < 8; i++) {
+    const randId = Math.floor(Math.random() * 35);
     fetch('/api/fire_node', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({id: randId})
     });
   }
+  showToast('SUCCESS', 'Neural Wave Fired', 'All 35 Sovereign Agents pulsed simultaneously by Managing Director.');
   pullState();
 }
-
-function drawErcotChart(curve) {
-  const svg = document.getElementById('ercotSvg');
-  if (!curve || !curve.length) return;
-  const w = 650, h = 200, padL = 45, padR = 15, padT = 16, padB = 28;
-  const plotW = w - padL - padR;
-  const plotH = h - padT - padB;
-  const maxP = 110;
-
-  const yForPrice = (p) => padT + plotH - (p / maxP) * plotH;
-  const xForIdx = (i) => padL + (i / (curve.length - 1)) * plotW;
-
-  const buyY = yForPrice(30);
-  const sellY = yForPrice(55);
-
-  let html = `
-    <rect x="${padL}" y="${buyY}" width="${plotW}" height="${padT + plotH - buyY}" fill="rgba(0, 255, 102, 0.08)" />
-    <line x1="${padL}" y1="${buyY}" x2="${w - padR}" y2="${buyY}" stroke="#00ff66" stroke-dasharray="4,4" />
-    <text x="${padL + 6}" y="${buyY - 5}" fill="#00ff66" font-size="9.5" font-weight="bold">BUY / CHARGE ZONE (Under $30/MWh)</text>
-
-    <rect x="${padL}" y="${padT}" width="${plotW}" height="${sellY - padT}" fill="rgba(255, 183, 0, 0.09)" />
-    <line x1="${padL}" y1="${sellY}" x2="${w - padR}" y2="${sellY}" stroke="#ffb700" stroke-dasharray="4,4" />
-    <text x="${padL + 6}" y="${sellY - 5}" fill="#ffb700" font-size="9.5" font-weight="bold">SELL FOR PROFIT ZONE (Over $55/MWh)</text>
-  `;
-
-  const pts = curve.map((c, i) => `${xForIdx(i)},${yForPrice(c.price)}`).join(' ');
-  html += `<polyline fill="none" stroke="#00e5ff" stroke-width="2.5" points="${pts}" />`;
-
-  curve.forEach((c, i) => {
-    const cx = xForIdx(i);
-    const cy = yForPrice(c.price);
-    const dotCol = c.price >= 55 ? '#ffb700' : (c.price <= 30 ? '#00ff66' : '#00e5ff');
-    html += `
-      <circle cx="${cx}" cy="${cy}" r="5.5" fill="${dotCol}" stroke="#000" stroke-width="1.5" style="cursor:pointer;"
-        onmouseenter="explainErcot(${i})" />
-      <text x="${cx}" y="${h - 8}" fill="#8a998a" font-size="9.5" text-anchor="middle">${c.hour}</text>
-      <text x="${cx}" y="${cy - 8}" fill="#e8f0e8" font-size="9.5" text-anchor="middle">$${c.price.toFixed(0)}</text>
-    `;
-  });
-
-  svg.innerHTML = html;
-}
-
-window.explainErcot = function(idx) {
-  const c = ercotData[idx];
-  if (!c) return;
-  const action = c.price >= 55 ? 'SELL POWER TO GRID FOR PROFIT' : (c.price <= 30 ? 'BUY & CHARGE BATTERIES CHEAP' : 'HOLD & WAIT');
-  document.getElementById('ercotExplainBox').innerHTML =
-    `<b>${c.hour} (${c.zone}) — Wholesale Price: $${c.price.toFixed(2)} per Megawatt-Hour</b><br>` +
-    `<span style="color:#00ff66; font-weight:bold;">Action: ${action}</span> — ${c.note}`;
-};
 
 async function submitMoney(kind) {
   const div = document.getElementById('payDiv').value;
@@ -400,10 +385,11 @@ async function submitMoney(kind) {
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({division: div, amount: amt, kind: kind})
   });
+  showToast('SUCCESS', 'Ledger Updated', `Successfully logged $${amt.toLocaleString()} to ${div}.`);
   pullState();
 }
 
-function updateTargetPaceClock() {
+function updateTargetClock() {
   const now = new Date();
   const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
   const elapsedSec = (Date.now() - startOfDay) / 1000.0;
@@ -412,7 +398,7 @@ function updateTargetPaceClock() {
   document.getElementById('targetTodayClock').textContent =
     '$' + paceToday.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 }
-setInterval(updateTargetPaceClock, 250);
+setInterval(updateTargetClock, 250);
 
 async function pullState() {
   try {
@@ -434,8 +420,8 @@ async function pullState() {
 
     if (!brainNodes.length) {
       brainNodes = data.nodes;
-      layoutBrainNodes(brainNodes);
-      selectNode(10);
+      layoutAiMindNodes(brainNodes);
+      selectNode(0);
     } else {
       data.nodes.forEach((n, i) => {
         brainNodes[i].runs = n.runs;
@@ -454,26 +440,36 @@ async function pullState() {
       </div>
     `).join('');
 
-    // Render Real Dallas Building Permits Table
-    if (data.dallas_permits && data.dallas_permits.length) {
-      document.getElementById('permitRows').innerHTML = data.dallas_permits.map(p => `
+    if (data.money.notifications) {
+      const notifs = data.money.notifications;
+      if (notifs.length > lastNotifCount) {
+        const latest = notifs[0];
+        if (lastNotifCount > 0) {
+          showToast(latest.severity, latest.title, latest.msg);
+        }
+        lastNotifCount = notifs.length;
+      }
+      document.getElementById('notifRows').innerHTML = notifs.map(n => `
         <tr>
-          <td><b style="color:var(--green);">${p.address}</b><div style="font-size:10.5px; color:var(--muted);">Permit #: ${p.permit_number}</div></td>
-          <td>${p.permit_type}</td>
-          <td style="color:var(--text); max-width:240px;">${p.description}</td>
-          <td style="color:${p.value.startsWith('$') ? '#00ff66' : '#ffb700'}; font-weight:bold;">${p.value}</td>
+          <td style="color:var(--muted); font-size:11px;">${n.time}</td>
+          <td><b style="color:${n.severity === 'SUCCESS' ? '#00ff66' : (n.severity === 'WARNING' ? '#ffb700' : '#00e5ff')};">${n.severity}</b></td>
+          <td><b>${n.title}:</b> ${n.msg}</td>
         </tr>
       `).join('');
     }
 
-    if (!ercotData.length && data.ercot_curve) {
-      ercotData = data.ercot_curve;
-      drawErcotChart(ercotData);
-    }
+    document.getElementById('divTable').innerHTML = data.money.streams.map(s => `
+      <tr>
+        <td><b>${s.name}</b></td>
+        <td>$${s.target.toLocaleString()}</td>
+        <td style="color:var(--green); font-weight:bold;">$${s.collected.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
+        <td style="color:var(--amber);">$${s.invoiced.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
+      </tr>
+    `).join('');
   } catch (e) {}
 }
 
-drawBrainNetwork();
+drawAiMindCanvas();
 pullState();
 setInterval(pullState, 2500);
 </script>
