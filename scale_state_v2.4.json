@@ -1,0 +1,24 @@
+{
+    "timestamp": "2026-11-08T04:11:38.718409Z",
+    "phase": "SOLID_OS_V2.4_INFRA_SCALE",
+    "status": "DEPLOYED",
+    "cage_code": "20U61",
+    "uei": "XT2KK6DNSLR5",
+    "nodes": [
+        {
+            "region": "us-south1",
+            "service": "moc_telemetry_stream",
+            "status": "ACTIVE"
+        },
+        {
+            "region": "us-central1",
+            "service": "energy_arbitrage_engine",
+            "status": "ACTIVE"
+        },
+        {
+            "region": "us-east4",
+            "service": "canbus_diagnostics_node",
+            "status": "ACTIVE"
+        }
+    ]
+}
