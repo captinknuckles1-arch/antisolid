@@ -1,0 +1,16 @@
+========================================================================
+SOLID INTEGRATIONS LLC // STATEMENT OF WORK (SOW)
+========================================================================
+Client Target     : Texas Industrial Fabrication Corp
+Location Corridor : Grand Prairie / DFW Airport
+Facility Scale    : 45000 SQFT
+Corporate Anchor  : CAGE: 20U61 | UEI: XT2KK6DNSLR5
+Authority         : Master Operations Controller (MOC)
+
+Scope of Services:
+1. Sovereign local infrastructure deployment and automated telemetry integration.
+2. CAN-bus diagnostic node integration and ECU performance monitoring.
+3. ERCOT nodal LFP battery energy arbitrage and grid optimization.
+
+Terms: Net-30 upon execution under sovereign MOC operational protocols.
+========================================================================
