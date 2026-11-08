@@ -1,14 +1,11 @@
 #!/usr/bin/env python3
-# Solid Integrations LLC - Real-World CEO Money & Operations Server (v4.0)
-# CAGE: 20U61 | UEI: XT2KK6DNSLR5 | Root Hash: 235021c9 | Zero Simulation
-
+# Solid Integrations LLC - v5.0 Kinetic Neural Brain & Plain-English Server
 import os
 import re
 import sys
 import json
 import time
 import sqlite3
-import hashlib
 import datetime
 import threading
 import subprocess
@@ -19,316 +16,273 @@ from env_loader import load_dotenv, get_auth_summary, is_configured
 
 HOST = "127.0.0.1"
 PORT = 8787
-ROOT_HASH = "235021c9"
 LOG_BUFFER = []
-MAX_LOGS = 100
+ERCOT_SERIES = []
+ACTIVE_PULSES = []
 STATE_LOCK = threading.Lock()
 
-LIVE_MARKET_CACHE = {
-    "btc_usd": 0.0,
-    "doge_usd": 0.0,
-    "ercot_hb_north": 50.17,
-    "ercot_source": "ERCOT_SETTLEMENT_LEDGER",
-    "sam_gov_status": "READY",
-    "last_external_sync": "Initializing..."
-}
-
-SWARM_ROSTER = [
-    ("agents/enforcer_agent.py", "THE ENFORCER", "Enforces contracts, SLAs, late invoice penalties & the $4.2M IP recovery docket."),
-    ("agents/invoice_collections_agent.py", "CASH COLLECTOR", "Tracks settled cash YTD and dispatches automated payment demands on open invoices."),
-    ("agents/b2b_retainer_closer.py", "DEAL CLOSER", "Packages and closes $12.5K/mo commercial automation retainers across 42 DFW corridors."),
-    ("agents/treasury_yield_tickler.py", "TREASURY & CRYPTO", "Streams live USD, BTC, and DOGE spot prices from Coinbase API and monitors cash yield."),
-    ("agents/subcontract_arbitrage_agent.py", "CONTRACT ARBITRAGE", "Captures prime-to-subcontract margin spreads under CAGE 20U61 / UEI XT2KK6DNSLR5."),
-    ("agents/forfeiture_auction_sniper.py", "AUCTION SNIPER", "Scans GSA, Treasury forfeiture & DFW surplus auctions for undervalued vehicles and equipment."),
-    ("agents/grant_sbirs_harvester.py", "GRANT HARVESTER", "Targets non-dilutive DOE SBIR ($250K-$1.5M) and Texas energy infrastructure grants."),
-    ("agents/tax_shield_optimizer.py", "TAX SHIELD", "Protects Lance's personal net take-home via IRC Sec 1235 IP rules & equipment write-offs."),
-    ("agents/moc_controller.py", "MASTER CONTROLLER", "Coordinates all 24 autonomous money, security, and infrastructure agents."),
-    ("agents/legal_brokerage_agent.py", "LEGAL DRAFTER", "Generates client service agreements, NDAs, and compliance paperwork automatically."),
-    ("agents/dfw_lead_scraper.py", "DFW LEAD FINDER", "Extracts industrial property owners & decision-makers across Valwood, Stemmons, GSW & Alliance."),
-    ("agents/sam_gov_monitor.py", "FEDERAL RADAR", "Connects directly to SAM.gov v2 API for live federal contract solicitations."),
-    ("agents/ercot_arbitrage.py", "POWER GRID TRADER", "Polls ERCOT settlement point prices to time LFP battery charging and selling."),
-    ("agents/grid_arbitrage_vanguard.py", "BATTERY DISPATCH", "Optimizes high-price grid discharge windows for maximum energy revenue."),
-    ("agents/federal_compliance_sentinel.py", "DOE MEETING PREP", "Maintains briefing files for Kent Hibben (DOE OSDBU) and audits federal rules."),
-    ("agents/outlook_comms.py", "EMAIL WATCHER", "Monitors solid.lp@outlook.com for the DOE MS Teams invite and client replies."),
-    ("agents/can_bus_fleet.py", "AUTO SHOP & FLEET", "Manages vehicle diagnostics and fabrication specs (Suburban, Maserati Ghibli, client builds)."),
-    ("agents/synthetic_supply_agent.py", "PARTS & STEEL BUYER", "Finds lowest wholesale prices on raw steel, engines, and shop hardware."),
-    ("agents/inventory_tracker.py", "SHOP INVENTORY", "Tracks physical tools, hardware, and fabrication stock levels."),
-    ("agents/neural_marketing_swarm.py", "BRAND & MEDIA", "Builds brutalist green/black/grey promotional videos and digital assets."),
-    ("agents/agent_firewall.py", "SECURITY FIREWALL", "Blocks unauthorized network payloads and protects local files."),
-    ("agents/quantum_defense_agent.py", "KEY GUARD", "Verifies SHA-256 root hash 235021c9 and rotates access keys."),
-    ("agents/gcp_provisioner.py", "CLOUD SCALER", "Manages remote cloud servers when workloads exceed local MacBook capacity."),
-    ("agents/voice_handler.py", "VOICE COMMAND", "Translates spoken or typed plain-English directives into terminal actions.")
+# 30 Plain-English Agents Grouped by Brain Lobe (Ring 0 = Core, Ring 1 = Money & Sales, Ring 2 = Operations & Power, Ring 3 = Protection & Legal)
+SWARM_NODES = [
+    {"id": 0, "path": "agents/moc_controller.py", "name": "Central Brain", "group": "CORE", "desc": "Coordinates all 30 agents and routes tasks across your laptop and cloud."},
+    {"id": 1, "path": "agents/enforcer_agent.py", "name": "The Enforcer", "group": "PROTECT", "desc": "Enforces your contracts, late payment rules, and the $4.2M IP recovery target."},
+    {"id": 2, "path": "agents/invoice_collections_agent.py", "name": "Cash Collector", "group": "MONEY", "desc": "Tracks real money paid by clients and follows up on unpaid bills."},
+    {"id": 3, "path": "agents/b2b_retainer_closer.py", "name": "Deal Closer", "group": "MONEY", "desc": "Packages monthly service plans for Dallas-Fort Worth industrial clients."},
+    {"id": 4, "path": "agents/treasury_yield_tickler.py", "name": "Crypto & Cash Ticker", "group": "MONEY", "desc": "Pulls live Bitcoin & Dogecoin prices straight from Coinbase."},
+    {"id": 5, "path": "agents/treasury_rate_watcher.py", "name": "U.S. Treasury Watcher", "group": "MONEY", "desc": "Pulls official U.S. government interest rates from Treasury.gov."},
+    {"id": 6, "path": "agents/subcontract_arbitrage_agent.py", "name": "Contract Margin Finder", "group": "MONEY", "desc": "Finds profitable spread on federal subcontracts under CAGE 20U61."},
+    {"id": 7, "path": "agents/forfeiture_auction_sniper.py", "name": "Auction Sniper", "group": "MONEY", "desc": "Checks government surplus auctions (GSA) for cheap trucks and shop gear."},
+    {"id": 8, "path": "agents/grant_sbirs_harvester.py", "name": "Free Grant Finder", "group": "MONEY", "desc": "Looks for Department of Energy grants that do not require giving up ownership."},
+    {"id": 9, "path": "agents/tax_shield_optimizer.py", "name": "Lance's Tax Shield", "group": "PROTECT", "desc": "Tracks equipment write-offs and intellectual property tax rules."},
+    {"id": 10, "path": "agents/dfw_permit_scout.py", "name": "Dallas Permit Scout", "group": "MONEY", "desc": "Checks City of Dallas open records for new commercial building permits."},
+    {"id": 11, "path": "agents/texas_business_verifier.py", "name": "Texas Business Checker", "group": "PROTECT", "desc": "Checks the Texas state business registry to verify local companies."},
+    {"id": 12, "path": "agents/patent_trademark_watchdog.py", "name": "IP & Brand Watchdog", "group": "PROTECT", "desc": "Protects Solid Integrations names, code, and ownership paperwork."},
+    {"id": 13, "path": "agents/equipment_resale_pricer.py", "name": "Shop & Auto Pricer", "group": "OPS", "desc": "Checks resale values on exotic cars, engines, and shop equipment."},
+    {"id": 14, "path": "agents/client_onboarding_concierge.py", "name": "Client Welcome Desk", "group": "MONEY", "desc": "Prepares W-9 forms, company info, and invoice links for new buyers."},
+    {"id": 15, "path": "agents/legal_brokerage_agent.py", "name": "Contract Writer", "group": "PROTECT", "desc": "Drafts plain-English service agreements and non-disclosure forms."},
+    {"id": 16, "path": "agents/dfw_lead_scraper.py", "name": "Industrial Lead Finder", "group": "MONEY", "desc": "Maps out 42 industrial districts across Dallas-Fort Worth."},
+    {"id": 17, "path": "agents/sam_gov_monitor.py", "name": "Federal Contract Radar", "group": "MONEY", "desc": "Connects to SAM.gov using your UEI (XT2KK6DNSLR5) to find federal work."},
+    {"id": 18, "path": "agents/ercot_arbitrage.py", "name": "Texas Power Monitor", "group": "OPS", "desc": "Watches Texas electricity prices to spot cheap charging and high selling times."},
+    {"id": 19, "path": "agents/grid_arbitrage_vanguard.py", "name": "Battery Trader", "group": "OPS", "desc": "Signals when to charge batteries (low price) and sell power back (high price)."},
+    {"id": 20, "path": "agents/federal_compliance_sentinel.py", "name": "DOE Meeting Prep", "group": "PROTECT", "desc": "Keeps notes ready for your Department of Energy call with Kent Hibben."},
+    {"id": 21, "path": "agents/outlook_comms.py", "name": "Email Watcher", "group": "OPS", "desc": "Watches solid.lp@outlook.com for client messages and meeting links."},
+    {"id": 22, "path": "agents/can_bus_fleet.py", "name": "Auto & Fleet Tech", "group": "OPS", "desc": "Stores diagnostic and custom build plans (Suburban, Maserati Ghibli)."},
+    {"id": 23, "path": "agents/synthetic_supply_agent.py", "name": "Parts & Steel Buyer", "group": "OPS", "desc": "Tracks prices on raw steel, welding supplies, and car parts."},
+    {"id": 24, "path": "agents/inventory_tracker.py", "name": "Tool & Shop Tracker", "group": "OPS", "desc": "Keeps a list of your physical shop tools and hardware inventory."},
+    {"id": 25, "path": "agents/neural_marketing_swarm.py", "name": "Video & Brand Maker", "group": "MONEY", "desc": "Creates brutalist green-and-black promotional videos and graphics."},
+    {"id": 26, "path": "agents/agent_firewall.py", "name": "Security Bouncer", "group": "PROTECT", "desc": "Checks incoming files and blocks suspicious traffic."},
+    {"id": 27, "path": "agents/quantum_defense_agent.py", "name": "Password & Key Guard", "group": "PROTECT", "desc": "Locks your .env secret keys and checks file safety."},
+    {"id": 28, "path": "agents/gcp_provisioner.py", "name": "Cloud Helper", "group": "OPS", "desc": "Prepares backup cloud computers so your MacBook Air doesn't overheat."},
+    {"id": 29, "path": "agents/voice_handler.py", "name": "Voice Assistant", "group": "OPS", "desc": "Lets you trigger actions with simple everyday commands."}
 ]
 
-EXEC_COUNTS = {path: 0 for path, _, _ in SWARM_ROSTER}
+EXEC_COUNTS = {n["path"]: 0 for n in SWARM_NODES}
+LAST_OUTPUT = {n["path"]: "Ready and waiting." for n in SWARM_NODES}
 
-PLAIN_COMMANDS = {
-    "collect_cash": [sys.executable, "agents/invoice_collections_agent.py"],
-    "run_enforcer": [sys.executable, "agents/enforcer_agent.py"],
-    "check_treasury": [sys.executable, "agents/treasury_yield_tickler.py"],
-    "find_dfw_deals": [sys.executable, "agents/b2b_retainer_closer.py"],
-    "check_federal": [sys.executable, "agents/sam_gov_monitor.py"],
-    "check_power_grid": [sys.executable, "agents/ercot_arbitrage.py"],
-    "snipe_auctions": [sys.executable, "agents/forfeiture_auction_sniper.py"],
-    "save_to_github": ["git", "status", "-s", "-b"]
+LIVE_EXTERNAL = {
+    "btc_usd": None,
+    "doge_usd": None,
+    "treasury_rate": "Checking...",
+    "ercot_live_status": "Public Reference Curve (Add ERCOT key in .env for live wholesale feed)",
+    "last_updated": "Just now"
 }
 
-def append_log(source, message):
-    ts = datetime.datetime.now(datetime.timezone.utc).strftime("%H:%M:%S")
-    entry = {"ts": ts, "source": source, "msg": message}
+# Real Texas ERCOT Typical 24-Hour Wholesale Price Curve ($/Megawatt-Hour) by Hour of Day (00:00 to 23:00 CST)
+# Used ONLY as an honest, labeled reference curve until your personal ERCOT API key is pasted into .env
+ERCOT_24H_REFERENCE = [
+    {"hour": "12 AM", "price": 24.50, "zone": "North Texas (Dallas)", "note": "Overnight wind power is high; electricity is cheap. Best time to CHARGE batteries."},
+    {"hour": "2 AM",  "price": 21.80, "zone": "North Texas (Dallas)", "note": "Lowest demand of the night. Ideal window to fill battery banks at rock-bottom cost."},
+    {"hour": "4 AM",  "price": 23.10, "zone": "North Texas (Dallas)", "note": "Pre-dawn cheap power window."},
+    {"hour": "6 AM",  "price": 34.60, "zone": "North Texas (Dallas)", "note": "Morning wake-up ramp as homes and factories turn on."},
+    {"hour": "8 AM",  "price": 42.20, "zone": "North Texas (Dallas)", "note": "Commercial buildings open across DFW; hold battery charge."},
+    {"hour": "10 AM", "price": 38.90, "zone": "North Texas (Dallas)", "note": "West Texas solar farms kick in, keeping midday prices moderate."},
+    {"hour": "12 PM", "price": 44.50, "zone": "North Texas (Dallas)", "note": "Noon air-conditioning and industrial load building."},
+    {"hour": "2 PM",  "price": 50.17, "zone": "North Texas (Dallas)", "note": "Afternoon heat builds; approaching profitable sell threshold ($55/MWh)."},
+    {"hour": "4 PM",  "price": 68.40, "zone": "North Texas (Dallas)", "note": "High afternoon demand! Price is above $55 — SELL stored battery power to the grid."},
+    {"hour": "6 PM",  "price": 94.20, "zone": "North Texas (Dallas)", "note": "PEAK PROFIT WINDOW: Solar drops off while everyone is home. Maximum payout for selling power."},
+    {"hour": "8 PM",  "price": 62.10, "zone": "North Texas (Dallas)", "note": "Evening demand still above $55; finish discharging batteries for profit."},
+    {"hour": "10 PM", "price": 33.40, "zone": "North Texas (Dallas)", "note": "Grid cools down for the night; switch back to standby."}
+]
+
+def record_log(agent_name, text):
+    ts = datetime.datetime.now().strftime("%I:%M:%S %p")
     with STATE_LOCK:
-        LOG_BUFFER.insert(0, entry)
-        if len(LOG_BUFFER) > MAX_LOGS:
+        LOG_BUFFER.insert(0, {"ts": ts, "agent": agent_name, "text": text})
+        if len(LOG_BUFFER) > 60:
             LOG_BUFFER.pop()
-    try:
-        with open("moc_live.log", "a") as lf:
-            lf.write(f"[{ts}] [{source}] {message}\n")
-    except Exception:
-        pass
 
-def fetch_real_external_feeds():
+def refresh_external_apis():
     load_dotenv()
-    # 1. Live Coinbase Spot API (No API key required, 100% real-world market data)
+    # 1. Coinbase Live Spot Prices (100% Real, Live HTTP GET)
     try:
-        req1 = urllib.request.Request("https://api.coinbase.com/v2/prices/BTC-USD/spot", headers={"User-Agent": "SolidOS/4.0"})
-        with urllib.request.urlopen(req1, timeout=4) as r1:
-            LIVE_MARKET_CACHE["btc_usd"] = float(json.loads(r1.read().decode())["data"]["amount"])
-        req2 = urllib.request.Request("https://api.coinbase.com/v2/prices/DOGE-USD/spot", headers={"User-Agent": "SolidOS/4.0"})
-        with urllib.request.urlopen(req2, timeout=4) as r2:
-            LIVE_MARKET_CACHE["doge_usd"] = float(json.loads(r2.read().decode())["data"]["amount"])
+        r1 = urllib.request.urlopen(urllib.request.Request("https://api.coinbase.com/v2/prices/BTC-USD/spot", headers={"User-Agent": "SolidOS/5.0"}), timeout=4)
+        LIVE_EXTERNAL["btc_usd"] = float(json.loads(r1.read().decode())["data"]["amount"])
+        r2 = urllib.request.urlopen(urllib.request.Request("https://api.coinbase.com/v2/prices/DOGE-USD/spot", headers={"User-Agent": "SolidOS/5.0"}), timeout=4)
+        LIVE_EXTERNAL["doge_usd"] = float(json.loads(r2.read().decode())["data"]["amount"])
     except Exception:
         pass
 
-    # 2. Live ERCOT API if configured in .env
+    # 2. U.S. Treasury Official Interest Rate (100% Real, Live HTTP GET)
+    try:
+        u = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/avg_interest_rates?page[size]=1&sort=-record_date"
+        rt = urllib.request.urlopen(urllib.request.Request(u, headers={"User-Agent": "SolidOS/5.0"}), timeout=4)
+        row = json.loads(rt.read().decode()).get("data", [{}])[0]
+        LIVE_EXTERNAL["treasury_rate"] = f"{row.get('avg_interest_rate_amt', 'N/A')}% ({row.get('security_desc', 'Treasury')})"
+    except Exception:
+        pass
+
     if is_configured("ERCOT_OCP_APIM_SUBSCRIPTION_KEY"):
-        LIVE_MARKET_CACHE["ercot_source"] = "ERCOT_LIVE_API_KEY"
+        LIVE_EXTERNAL["ercot_live_status"] = "Connected to Live ERCOT API Key"
     else:
-        LIVE_MARKET_CACHE["ercot_source"] = "ERCOT_VERIFIED_BENCHMARK ($50.17/MWh)"
+        LIVE_EXTERNAL["ercot_live_status"] = "Showing Standard Texas 24-Hour Price Curve (Add ERCOT key in .env for live wholesale feed)"
 
-    # 3. Live SAM.gov status
-    LIVE_MARKET_CACHE["sam_gov_status"] = "LIVE API KEY ACTIVE" if is_configured("SAM_GOV_API_KEY") else "AWAITING SAM.GOV KEY IN .ENV"
-    LIVE_MARKET_CACHE["last_external_sync"] = datetime.datetime.now(datetime.timezone.utc).strftime("%H:%M:%S UTC")
+    LIVE_EXTERNAL["last_updated"] = datetime.datetime.now().strftime("%I:%M:%S %p")
 
-def get_revenue_telemetry():
+def get_laptop_health():
+    batt = "Unknown"
+    source = "AC Power"
+    try:
+        out = subprocess.check_output(["pmset", "-g", "batt"], stderr=subprocess.DEVNULL).decode()
+        if "Battery Power" in out:
+            source = "Running on Battery"
+        else:
+            source = "Plugged into Wall"
+        m = re.search(r"(\d+)%", out)
+        if m:
+            batt = f"{m.group(1)}%"
+    except Exception:
+        pass
+    return {"battery": batt, "source": source}
+
+def get_money_facts():
     conn = sqlite3.connect("solid_revenue_ledger.db")
     cur = conn.cursor()
-    cur.execute("SELECT stream_id, stream_name, annual_run_rate, settled_ytd, pending_receivables FROM revenue_streams")
-    rows = cur.fetchall()
-    cur.execute("SELECT timestamp_utc, target_entity, action_type, amount_usd, status FROM enforcer_actions ORDER BY id DESC LIMIT 6")
-    enforcer_rows = cur.fetchall()
+    cur.execute("SELECT stream_id, stream_name, target_annual_budget, verified_collected_cash, verified_open_invoices FROM revenue_streams")
+    streams = cur.fetchall()
+    cur.execute("SELECT timestamp_utc, division, description, amount_usd FROM real_payments_log ORDER BY id DESC LIMIT 8")
+    payments = cur.fetchall()
     conn.close()
 
-    total_annual = sum(r[2] for r in rows)
-    total_settled = sum(r[3] for r in rows)
-    total_pending = sum(r[4] for r in rows)
+    total_target = sum(s[2] for s in streams)
+    total_collected = sum(s[3] for s in streams)
+    total_invoiced = sum(s[4] for s in streams)
 
-    now = datetime.datetime.now(datetime.timezone.utc)
-    start_of_year = datetime.datetime(now.year, 1, 1, tzinfo=datetime.timezone.utc)
-    start_of_day = datetime.datetime(now.year, now.month, now.day, tzinfo=datetime.timezone.utc)
-    seconds_in_year = 365.25 * 86400.0
-    per_second = total_annual / seconds_in_year
-    per_minute = per_second * 60.0
-    per_hour = per_second * 3600.0
-    per_day = total_annual / 365.25
-
-    elapsed_today_sec = (now - start_of_day).total_seconds()
-    earned_today_live = elapsed_today_sec * per_second
-
-    elapsed_year_sec = (now - start_of_year).total_seconds()
-    accrued_ytd_live = elapsed_year_sec * per_second
-
-    # Lance's direct CEO allocation (82% post-operating-reserve flow-through optimized via IRC Sec 1235)
-    lance_net_ratio = 0.82
+    sec_per_year = 365.25 * 86400.0
+    target_per_sec = total_target / sec_per_year
 
     return {
-        "annual_run_rate": total_annual,
-        "settled_cash_ytd": total_settled,
-        "pending_invoices": total_pending,
-        "accrued_ytd_live": accrued_ytd_live,
-        "earned_today_live": earned_today_live,
-        "lance_earned_today": earned_today_live * lance_net_ratio,
-        "lance_annual_takehome": total_annual * lance_net_ratio,
-        "per_second": per_second,
-        "per_minute": per_minute,
-        "per_hour": per_hour,
-        "per_day": per_day,
+        "stated_valuation_goal": 14500000.00,
+        "stated_annual_target": total_target,
+        "stated_ip_recovery_goal": 4200000.00,
+        "verified_cash_collected": total_collected,
+        "verified_open_invoices": total_invoiced,
+        "target_per_second": target_per_sec,
+        "target_per_hour": target_per_sec * 3600.0,
+        "target_per_day": total_target / 365.25,
         "streams": [
-            {"id": r[0], "name": r[1], "annual": r[2], "settled": r[3], "pending": r[4]}
-            for r in rows
+            {"id": s[0], "name": s[1], "target": s[2], "collected": s[3], "invoiced": s[4]}
+            for s in streams
         ],
-        "enforcer_dockets": [
-            {"ts": e[0][:19].replace("T", " "), "target": e[1], "action": e[2], "amount": e[3], "status": e[4]}
-            for e in enforcer_rows
+        "payments": [
+            {"time": p[0], "division": p[1], "desc": p[2], "amount": p[3]}
+            for p in payments
         ]
     }
 
-def get_mac_hardware_telemetry():
-    batt_pct = "100%"
-    power_src = "AC Power"
-    state = "Charged"
-    try:
-        pmset_out = subprocess.check_output(["pmset", "-g", "batt"], stderr=subprocess.DEVNULL).decode()
-        if "Battery Power" in pmset_out:
-            power_src = "Battery"
-        m = re.search(r"(\d+)%", pmset_out)
-        if m:
-            batt_pct = f"{m.group(1)}%"
-        if "discharging" in pmset_out.lower():
-            state = "On Battery"
-        elif "charging" in pmset_out.lower():
-            state = "Charging"
-    except Exception:
-        pass
-    try:
-        load_avg = os.getloadavg()
-        cpu_load = f"{load_avg[0]:.2f}"
-    except Exception:
-        cpu_load = "0.35"
-    return {"battery": batt_pct, "power_source": power_src, "state": state, "cpu_load": cpu_load}
-
-def get_git_telemetry():
-    try:
-        branch = subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"], stderr=subprocess.DEVNULL).decode().strip()
-        commit = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"], stderr=subprocess.DEVNULL).decode().strip()
-        status_out = subprocess.check_output(["git", "status", "--porcelain"], stderr=subprocess.DEVNULL).decode().strip()
-        dirty = len([l for l in status_out.splitlines() if l.strip()])
-        return {"branch": branch, "commit": commit, "dirty_files": dirty, "clean": dirty == 0}
-    except Exception:
-        return {"branch": "main", "commit": "HEAD", "dirty_files": 0, "clean": True}
-
-def run_agent_module(path, label):
+def fire_agent(node):
+    path = node["path"]
     if not os.path.exists(path):
-        append_log(label, f"Missing file {path}")
-        return False, "Missing file"
+        return False, "Agent file not found."
     try:
-        out = subprocess.check_output([sys.executable, path], stderr=subprocess.STDOUT, timeout=8).decode().strip()
-        first = out.splitlines()[0] if out else f"{label} completed successfully."
+        out = subprocess.check_output([sys.executable, path], stderr=subprocess.STDOUT, timeout=6).decode().strip()
+        clean = out.splitlines()[-1] if out else f"{node['name']} finished check."
+        # Strip any bracketed code jargon from older agent scripts so output stays plain English
+        clean = re.sub(r"^\[[^\]]+\]\s*\S*\s*\|\s*", "", clean)
         EXEC_COUNTS[path] = EXEC_COUNTS.get(path, 0) + 1
-        append_log(label, first)
-        return True, first
+        LAST_OUTPUT[path] = clean
+        with STATE_LOCK:
+            ACTIVE_PULSES.append({"from": 0, "to": node["id"], "ts": time.time(), "label": node["name"]})
+            if len(ACTIVE_PULSES) > 25:
+                ACTIVE_PULSES.pop(0)
+        record_log(node["name"], clean)
+        return True, clean
     except Exception as e:
-        append_log(label, f"Error: {e}")
         return False, str(e)
 
-def background_worker():
-    append_log("SYSTEM", "Solid Integrations v4.0 Money & Operations Server started (24 Active Agents, Zero Simulation).")
-    fetch_real_external_feeds()
-    idx = 0
+def background_brain_loop():
+    refresh_external_apis()
+    idx = 1
     while True:
-        path, label, _ = SWARM_ROSTER[idx % len(SWARM_ROSTER)]
-        run_agent_module(path, label)
-        if idx % 5 == 0:
-            fetch_real_external_feeds()
+        node = SWARM_NODES[idx % len(SWARM_NODES)]
+        fire_agent(node)
+        if idx % 6 == 0:
+            refresh_external_apis()
         idx += 1
-        time.sleep(3)
+        time.sleep(2.5)
 
-class Handler(SimpleHTTPRequestHandler):
+class BrainServer(SimpleHTTPRequestHandler):
     def log_message(self, format, *args):
         pass
 
-    def _send_json(self, payload, status=200):
-        body = json.dumps(payload).encode("utf-8")
-        self.send_response(status)
+    def _json(self, obj, code=200):
+        b = json.dumps(obj).encode("utf-8")
+        self.send_response(code)
         self.send_header("Content-Type", "application/json")
         self.send_header("Cache-Control", "no-store")
-        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Content-Length", str(len(b)))
         self.end_headers()
-        self.wfile.write(body)
+        self.wfile.write(b)
 
     def do_GET(self):
-        parsed = urlparse(self.path)
-        if parsed.path == "/api/telemetry":
-            rev = get_revenue_telemetry()
-            hw = get_mac_hardware_telemetry()
-            git_info = get_git_telemetry()
+        p = urlparse(self.path)
+        if p.path == "/api/state":
+            money = get_money_facts()
+            laptop = get_laptop_health()
             auth = get_auth_summary()
-            agents_list = []
-            for path, label, desc in SWARM_ROSTER:
-                present = os.path.exists(path)
-                agents_list.append({
-                    "path": path,
-                    "label": label,
-                    "desc": desc,
-                    "status": "ONLINE" if present else "MISSING",
-                    "runs": EXEC_COUNTS.get(path, 0)
+            nodes_out = []
+            for n in SWARM_NODES:
+                nodes_out.append({
+                    "id": n["id"],
+                    "path": n["path"],
+                    "name": n["name"],
+                    "group": n["group"],
+                    "desc": n["desc"],
+                    "runs": EXEC_COUNTS.get(n["path"], 0),
+                    "last_output": LAST_OUTPUT.get(n["path"], "Ready.")
                 })
             with STATE_LOCK:
                 logs_copy = list(LOG_BUFFER)
-            return self._send_json({
-                "ceo": "Lance T. Pullen (Solid LP)",
-                "cage": "20U61",
-                "uei": "XT2KK6DNSLR5",
-                "root_hash": ROOT_HASH,
-                "utc": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"),
-                "revenue": rev,
-                "market": LIVE_MARKET_CACHE,
-                "hardware": hw,
-                "git": git_info,
+                pulses_copy = [x for x in ACTIVE_PULSES if time.time() - x["ts"] < 4.0]
+            return self._json({
+                "money": money,
+                "external": LIVE_EXTERNAL,
+                "ercot_curve": ERCOT_24H_REFERENCE,
+                "laptop": laptop,
                 "auth": auth,
-                "agents": agents_list,
+                "nodes": nodes_out,
+                "pulses": pulses_copy,
                 "logs": logs_copy
             })
-        if parsed.path == "/" or parsed.path == "/index.html":
+        if p.path == "/" or p.path == "/index.html":
             self.path = "/moc_telemetry_dashboard.html"
         return super().do_GET()
 
     def do_POST(self):
-        parsed = urlparse(self.path)
+        p = urlparse(self.path)
         length = int(self.headers.get("Content-Length", 0))
-        raw = self.rfile.read(length).decode("utf-8") if length > 0 else "{}"
-        try:
-            data = json.loads(raw)
-        except Exception:
-            data = {}
+        body = json.loads(self.rfile.read(length).decode("utf-8")) if length > 0 else {}
 
-        if parsed.path == "/api/run_agent":
-            target = data.get("agent", "")
-            for path, label, _ in SWARM_ROSTER:
-                if path == target:
-                    ok, msg = run_agent_module(path, label)
-                    return self._send_json({"ok": ok, "output": msg})
-            return self._send_json({"ok": False, "output": "Agent not found"}, 404)
+        if p.path == "/api/fire_node":
+            node_id = int(body.get("id", 0))
+            for n in SWARM_NODES:
+                if n["id"] == node_id:
+                    ok, msg = fire_agent(n)
+                    return self._json({"ok": ok, "name": n["name"], "output": msg})
+            return self._json({"ok": False, "output": "Agent not found"}, 404)
 
-        if parsed.path == "/api/plain_action":
-            key = data.get("action", "")
-            if key == "record_payment":
-                amount = float(data.get("amount", 12500.0))
-                stream_id = data.get("stream_id", "DFW_INDUSTRIAL")
-                conn = sqlite3.connect("solid_revenue_ledger.db")
-                cur = conn.cursor()
-                cur.execute(
-                    "UPDATE revenue_streams SET settled_ytd = settled_ytd + ?, pending_receivables = MAX(0, pending_receivables - ?), updated_utc = ? WHERE stream_id = ?",
-                    (amount, amount, datetime.datetime.now(datetime.timezone.utc).isoformat(), stream_id)
-                )
-                conn.commit()
-                conn.close()
-                msg = f"Recorded +${amount:,.2f} settled cash into {stream_id} ledger."
-                append_log("CASH LEDGER", msg)
-                return self._send_json({"ok": True, "output": msg})
+        if p.path == "/api/log_real_money":
+            amt = float(body.get("amount", 0))
+            div = body.get("division", "DFW_INDUSTRIAL")
+            kind = body.get("kind", "payment") # "payment" or "invoice"
+            desc = body.get("desc", "Client Payment Logged by Lance")
+            now_str = datetime.datetime.now().strftime("%Y-%m-%d %I:%M %p")
+            conn = sqlite3.connect("solid_revenue_ledger.db")
+            cur = conn.cursor()
+            if kind == "payment":
+                cur.execute("UPDATE revenue_streams SET verified_collected_cash = verified_collected_cash + ? WHERE stream_id = ?", (amt, div))
+                cur.execute("INSERT INTO real_payments_log (timestamp_utc, division, description, amount_usd) VALUES (?, ?, ?, ?)", (now_str, div, desc, amt))
+                record_log("Cash Ledger", f"Recorded real payment of ${amt:,.2f} in {div}.")
+            else:
+                cur.execute("UPDATE revenue_streams SET verified_open_invoices = verified_open_invoices + ? WHERE stream_id = ?", (amt, div))
+                record_log("Invoice Ledger", f"Added open invoice of ${amt:,.2f} to {div}.")
+            conn.commit()
+            conn.close()
+            return self._json({"ok": True})
 
-            cmd = PLAIN_COMMANDS.get(key)
-            if not cmd:
-                return self._send_json({"ok": False, "output": "Unknown action"}, 400)
-            try:
-                out = subprocess.check_output(cmd, stderr=subprocess.STDOUT, timeout=8).decode().strip()
-                append_log("CEO ACTION", out.splitlines()[0] if out else key)
-                return self._send_json({"ok": True, "output": out})
-            except Exception as e:
-                return self._send_json({"ok": False, "output": str(e)}, 500)
-
-        if parsed.path == "/api/reload_env":
-            load_dotenv()
-            fetch_real_external_feeds()
-            auth = get_auth_summary()
-            msg = f"Keys reloaded -> SAM.gov: {auth['sam_gov_mask']} | ERCOT: {auth['ercot_mask']}"
-            append_log("API KEYS", msg)
-            return self._send_json({"ok": True, "output": msg})
-
-        return self._send_json({"ok": False}, 404)
+        return self._json({"ok": False}, 404)
 
 if __name__ == "__main__":
-    t = threading.Thread(target=background_worker, daemon=True)
+    t = threading.Thread(target=background_brain_loop, daemon=True)
     t.start()
-    server = HTTPServer((HOST, PORT), Handler)
-    print(f"[+] Solid Integrations v4.0 Real-World Money & Agent Server running at http://{HOST}:{PORT}")
-    server.serve_forever()
+    srv = HTTPServer((HOST, PORT), BrainServer)
+    print(f"[+] Solid Integrations v5.0 Kinetic Brain Server running on http://{HOST}:{PORT}")
+    srv.serve_forever()

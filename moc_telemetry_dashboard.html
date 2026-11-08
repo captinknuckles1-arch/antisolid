@@ -2,270 +2,479 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>SOLID INTEGRATIONS // LANCE'S LIVE MONEY & AGENT COMMAND CENTER</title>
+<title>SOLID INTEGRATIONS // LANCE'S NEURAL COMMAND CENTER</title>
 <style>
-  :root { --bg: #060806; --panel: #0f130f; --border: #232c23; --green: #00ff66; --amber: #ffcc00; --muted: #849284; --text: #e4eee4; }
-  * { box-sizing: border-box; font-family: 'Courier New', monospace; }
-  body { margin: 0; padding: 16px; background: var(--bg); color: var(--text); font-size: 12.5px; }
-  .header { border: 2px solid var(--green); padding: 14px 18px; background: var(--panel); margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-  .title { font-size: 19px; font-weight: bold; color: var(--green); }
-  .sub { font-size: 11.5px; color: var(--muted); margin-top: 4px; }
-  .money-banner { border: 2px solid var(--green); background: #081108; padding: 16px; margin-bottom: 14px; display: grid; grid-template-columns: 1.4fr 1.4fr 1fr 1fr 1fr; gap: 14px; align-items: center; }
-  .big-money-label { font-size: 11px; color: var(--muted); text-transform: uppercase; }
-  .big-money { font-size: 28px; font-weight: bold; color: var(--green); letter-spacing: 0.5px; margin-top: 4px; }
-  .rate-pill { font-size: 13px; font-weight: bold; color: var(--text); margin-top: 4px; }
-  .grid-3 { display: grid; grid-template-columns: 1.1fr 1.1fr 0.8fr; gap: 14px; margin-bottom: 14px; }
-  .grid-2 { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 14px; margin-bottom: 14px; }
-  .card { background: var(--panel); border: 1px solid var(--border); padding: 14px; }
-  .card h3 { margin: 0 0 10px 0; font-size: 12px; color: var(--green); text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 6px; display: flex; justify-content: space-between; }
-  button { background: var(--green); color: #000; border: none; padding: 7px 12px; font-weight: bold; cursor: pointer; font-size: 11.5px; }
-  button:hover { opacity: 0.88; }
-  .btn-action { background: #141d14; color: var(--green); border: 1px solid var(--green); padding: 7px 10px; font-size: 11.5px; text-align: left; }
-  .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
-  .console-out { background: #030503; border: 1px solid var(--border); color: var(--green); padding: 10px; height: 110px; overflow-y: auto; white-space: pre-wrap; font-size: 11.5px; }
-  .bus-log { height: 210px; overflow-y: auto; background: #030503; border: 1px solid var(--border); padding: 10px; font-size: 11.5px; line-height: 1.55; }
-  .log-line { margin-bottom: 4px; border-bottom: 1px dotted #161e16; padding-bottom: 3px; }
-  .kv-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px dotted #1b241b; }
-  table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
-  th, td { border: 1px solid var(--border); padding: 7px 8px; text-align: left; }
-  th { background: #151c15; color: var(--green); }
+  :root { --bg: #050705; --card: #0d120d; --border: #1f2b1f; --green: #00ff66; --cyan: #00e5ff; --amber: #ffb700; --red: #ff4d4d; --text: #e8f0e8; --muted: #8a998a; }
+  * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+  body { margin: 0; padding: 16px; background: var(--bg); color: var(--text); font-size: 13px; }
+  .top-bar { border: 2px solid var(--green); background: var(--card); padding: 14px 18px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 14px; }
+  .title { font-size: 20px; font-weight: 800; color: var(--green); letter-spacing: 0.5px; }
+  .subtitle { font-size: 12px; color: var(--muted); margin-top: 3px; }
+  .btn { background: var(--green); color: #000; border: none; padding: 8px 14px; font-weight: 700; border-radius: 4px; cursor: pointer; font-size: 12px; }
+  .btn:hover { filter: brightness(1.1); }
+  .btn-outline { background: #121a12; color: var(--green); border: 1px solid var(--green); padding: 7px 12px; font-weight: 600; border-radius: 4px; cursor: pointer; font-size: 12px; }
+  .money-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 14px; }
+  .stat-box { background: var(--card); border: 1px solid var(--border); padding: 14px; border-radius: 6px; }
+  .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; font-weight: 700; }
+  .stat-val { font-size: 24px; font-weight: 800; color: var(--green); margin: 6px 0 4px 0; }
+  .stat-note { font-size: 11.5px; color: var(--muted); }
+  .main-grid { display: grid; grid-template-columns: 1.35fr 0.65fr; gap: 14px; margin-bottom: 14px; }
+  .sub-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 14px; margin-bottom: 14px; }
+  .card { background: var(--card); border: 1px solid var(--border); padding: 16px; border-radius: 6px; }
+  .card-title { font-size: 14px; font-weight: 800; color: var(--green); margin: 0 0 10px 0; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+  canvas { width: 100%; height: 480px; background: radial-gradient(circle at center, #0a140a 0%, #040604 100%); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; display: block; }
+  .inspector { background: #070b07; border: 1px solid var(--green); padding: 12px; border-radius: 6px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .feed-box { height: 290px; overflow-y: auto; background: #060906; border: 1px solid var(--border); border-radius: 4px; padding: 10px; }
+  .feed-item { padding: 7px 0; border-bottom: 1px solid #121a12; font-size: 12.5px; line-height: 1.4; }
+  .legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  th, td { border-bottom: 1px solid var(--border); padding: 8px 6px; text-align: left; }
+  th { color: var(--muted); font-size: 11px; text-transform: uppercase; }
+  input, select { background: #060906; color: var(--text); border: 1px solid var(--border); padding: 7px; border-radius: 4px; font-size: 12px; }
 </style>
 </head>
 <body>
 
-  <div class="header">
+  <div class="top-bar">
     <div>
-      <div class="title">SOLID INTEGRATIONS LLC // REAL-TIME MONEY & 24-AGENT COMMAND CENTER</div>
-      <div class="sub" id="hdrSub">CEO: LANCE T. PULLEN (SOLID LP) | CAGE: 20U61 | UEI: XT2KK6DNSLR5 | 100% REAL SQLITE + LIVE API FEEDS</div>
+      <div class="title">SOLID INTEGRATIONS LLC // LIVE NEURAL BRAIN & MONEY COMMAND</div>
+      <div class="subtitle">Owner & CEO: Lance T. Pullen (Solid LP) • Federal CAGE: 20U61 • UEI: XT2KK6DNSLR5 • Zero Fake Data Mode</div>
     </div>
-    <div style="display:flex; gap:8px;">
-      <button onclick="recordPayment()">+ LOG $12,500 CLIENT PAYMENT</button>
-      <button onclick="reloadKeys()">RELOAD .ENV API KEYS</button>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <span id="laptopBadge" style="color:var(--muted); font-size:12px;">Checking Laptop Battery...</span>
+      <button class="btn" onclick="fireRandomWave()">⚡ FIRE ALL BRAIN NODES NOW</button>
     </div>
   </div>
 
-  <!-- REAL-TIME SECOND-BY-SECOND MONEY COUNTER -->
-  <div class="money-banner">
-    <div>
-      <div class="big-money-label">Solid Integrations Earned Today (Live Clock)</div>
-      <div class="big-money" id="liveToday">$0.0000</div>
-      <div class="sub">Accruing continuously from $3,850,000/yr active run-rate</div>
+  <!-- HONEST, VERIFIED MONEY & LIVE MARKET STRIP -->
+  <div class="money-strip">
+    <div class="stat-box">
+      <div class="stat-label">Verified Cash Collected</div>
+      <div class="stat-val" id="realCollected">$0.00</div>
+      <div class="stat-note">100% real payments logged by you (Zero fake numbers)</div>
     </div>
-    <div>
-      <div class="big-money-label">Lance's Net Take-Home Today (82% IRC 1235 Flow)</div>
-      <div class="big-money" id="liveLanceToday">$0.0000</div>
-      <div class="sub" id="lanceAnnualSub">Est. $3,157,000/yr net personal allocation</div>
+    <div class="stat-box">
+      <div class="stat-label">Open Client Invoices</div>
+      <div class="stat-val" style="color:var(--amber);" id="realInvoiced">$0.00</div>
+      <div class="stat-note">Real bills sent out & waiting to be paid</div>
     </div>
-    <div>
-      <div class="big-money-label">Exact Earnings Speed</div>
-      <div class="rate-pill" id="rateSec">$0.1220 / second</div>
-      <div class="rate-pill" id="rateMin">$7.32 / minute</div>
-      <div class="rate-pill" id="rateHr">$439.20 / hour</div>
+    <div class="stat-box">
+      <div class="stat-label">Target Pace ($3.85M/Yr Goal)</div>
+      <div class="stat-val" id="targetTodayClock">$0.00</div>
+      <div class="stat-note" id="targetSpeedNote">Target pace: $0.1220/sec ($439.20/hr)</div>
     </div>
-    <div>
-      <div class="big-money-label">Cash Settled in Bank (YTD)</div>
-      <div class="big-money" style="font-size:22px;" id="settledYtd">$864,700.00</div>
-      <div class="sub" id="pendingInv">+$554,800.00 in open invoices</div>
+    <div class="stat-box">
+      <div class="stat-label">Live Bitcoin & Dogecoin</div>
+      <div class="stat-val" style="font-size:19px;" id="liveCrypto">Loading Coinbase...</div>
+      <div class="stat-note" id="liveTreasury">U.S. Treasury Rate: Checking...</div>
     </div>
-    <div>
-      <div class="big-money-label">The Enforcer Recovery Target</div>
-      <div class="big-money" style="font-size:22px; color:var(--amber);">$4,200,000</div>
-      <div class="sub">IRC Sec 1235 IP Restitution + SLAs</div>
+    <div class="stat-box">
+      <div class="stat-label">Enforcer Legal Target</div>
+      <div class="stat-val" style="color:var(--cyan);">$4,200,000</div>
+      <div class="stat-note">Stated IP recovery goal + $14.5M company valuation goal</div>
     </div>
   </div>
 
-  <div class="grid-3">
-    <!-- PLAIN-ENGLISH 1-CLICK COMMAND BUTTONS -->
+  <!-- KINETIC BRAIN NETWORK + LIVE ACTIVITY FEED -->
+  <div class="main-grid">
     <div class="card">
-      <h3><span>Plain-English Action Buttons (Click Any Button to Run Live)</span><span>NO JARGON</span></h3>
-      <div class="btn-grid">
-        <button class="btn-action" onclick="plainAction('run_enforcer')">1. Run The Enforcer (IP & Late Invoices)</button>
-        <button class="btn-action" onclick="plainAction('collect_cash')">2. Check Open Invoices & Collect Cash</button>
-        <button class="btn-action" onclick="plainAction('find_dfw_deals')">3. Close DFW $12.5K/mo Retainer Deals</button>
-        <button class="btn-action" onclick="plainAction('check_federal')">4. Scan SAM.gov Federal Contracts</button>
-        <button class="btn-action" onclick="plainAction('check_power_grid')">5. Check Texas Power Grid Prices</button>
-        <button class="btn-action" onclick="plainAction('snipe_auctions')">6. Scan Undervalued Fleet Auctions</button>
-        <button class="btn-action" onclick="plainAction('check_treasury')">7. Check Live Crypto & Treasury Prices</button>
-        <button class="btn-action" onclick="plainAction('save_to_github')">8. Verify Local Files & Git Status</button>
+      <div class="card-title">
+        <span>🧠 LIVE 30-AGENT NEURAL BRAIN NETWORK (Click Any Neuron to Fire It)</span>
+        <span style="font-size:11.5px; font-weight:normal; color:var(--muted);">
+          <span class="legend-dot" style="background:#00ff66;"></span>Money & Sales
+          <span class="legend-dot" style="background:#00e5ff; margin-left:8px;"></span>Power & Shop Ops
+          <span class="legend-dot" style="background:#ffb700; margin-left:8px;"></span>Protection & Legal
+        </span>
       </div>
-      <div class="console-out" id="consoleOut">Click any plain-English button above to run that tool and see the real output here...</div>
-    </div>
-
-    <!-- REVENUE BREAKDOWN BY DIVISION -->
-    <div class="card">
-      <h3><span>Where Our Money Comes From (SQLite Ledger)</span><span>$3.85M / YEAR</span></h3>
-      <table>
-        <thead><tr><th>Business Division</th><th>Annual Run-Rate</th><th>Cash Collected</th><th>Waiting to Collect</th></tr></thead>
-        <tbody id="streamRows"></tbody>
-      </table>
-      <div style="margin-top:10px; font-size:11px; color:var(--muted);">
-        * Every division above is stored in <b>~/antisolid/solid_revenue_ledger.db</b>. Click "+ LOG $12,500 CLIENT PAYMENT" at top right whenever a retainer clears to move money from Waiting to Cash Collected.
+      <canvas id="brainCanvas" width="900" height="480"></canvas>
+      <div class="inspector">
+        <div>
+          <div style="font-weight:800; color:var(--green); font-size:14px;" id="selName">Click any glowing neuron in the brain above to inspect or run it</div>
+          <div style="color:var(--text); margin-top:3px;" id="selDesc">When a neuron fires, you will see a bright pulse travel from the Central Brain to that agent, showing where the task is going in real time.</div>
+          <div style="color:var(--muted); font-size:11.5px; margin-top:4px;" id="selOut">Last Report: Waiting for click...</div>
+        </div>
+        <button class="btn" id="selBtn" onclick="fireSelectedNode()">RUN THIS AGENT NOW</button>
       </div>
     </div>
 
-    <!-- LIVE REAL-WORLD MARKET & HOST STATUS -->
     <div class="card">
-      <h3><span>Live Real-World Feeds & Laptop Health</span><span id="extSync">--</span></h3>
-      <div class="kv-row"><span>Live Bitcoin Price (Coinbase):</span><b id="mBtc">Loading...</b></div>
-      <div class="kv-row"><span>Live Dogecoin Price (Coinbase):</span><b id="mDoge">Loading...</b></div>
-      <div class="kv-row"><span>Texas Power Grid (ERCOT):</span><b id="mErcot">$50.17 / MWh</b></div>
-      <div class="kv-row"><span>DOE Advocate Contact:</span><b style="color:var(--amber);">Kent Hibben (MS Teams)</b></div>
-      <div class="kv-row"><span>SAM.gov Connection:</span><b id="mSam">Checking...</b></div>
-      <div class="kv-row"><span>MacBook Air Battery:</span><b id="mBatt">Checking...</b></div>
-      <div class="kv-row"><span>Git Backup Status:</span><b id="mGit">Checking...</b></div>
+      <div class="card-title">
+        <span>⚡ WHAT YOUR AGENTS ARE DOING RIGHT NOW</span>
+        <span style="font-size:11px; color:var(--muted);" id="clockStamp">Live</span>
+      </div>
+      <div class="feed-box" id="liveFeed"></div>
+
+      <div style="margin-top:14px; border-top:1px solid var(--border); padding-top:12px;">
+        <div style="font-weight:800; color:var(--green); margin-bottom:8px;">💵 RECORD REAL CLIENT PAYMENT OR INVOICE</div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:8px;">
+          <select id="payDiv">
+            <option value="DFW_INDUSTRIAL">DFW Industrial Automation</option>
+            <option value="FEDERAL_CONTRACTS">Federal & DOE Contracts</option>
+            <option value="TEXAS_POWER_GRID">Texas Power Grid Trading</option>
+            <option value="CUSTOM_AUTO_FAB">Custom Auto & Fabrication</option>
+          </select>
+          <input type="number" id="payAmt" placeholder="Amount in USD (e.g. 2500)" value="2500" />
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn" style="flex:1;" onclick="submitMoney('payment')">+ ADD REAL PAID CASH</button>
+          <button class="btn-outline" style="flex:1;" onclick="submitMoney('invoice')">+ ADD OPEN INVOICE</button>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="grid-2">
+  <!-- INTERACTIVE PLAIN-ENGLISH TEXAS POWER GRID GRAPH + BUSINESS DIVISIONS -->
+  <div class="sub-grid">
     <div class="card">
-      <h3><span>Live Activity Feed (What Your 24 Agents Just Did)</span><span id="lastPoll">--</span></h3>
-      <div class="bus-log" id="busLog"></div>
+      <div class="card-title">
+        <span>🔋 TEXAS POWER GRID (ERCOT) — WHEN WE BUY & SELL ELECTRICITY FOR PROFIT</span>
+        <span style="font-size:11px; color:var(--amber);">Hover over any dot on the curve below</span>
+      </div>
+      <div style="font-size:12px; color:var(--muted); margin-bottom:8px;">
+        <b>How this makes money in plain English:</b> Electricity prices in Texas change all day. When power drops <b>below $30</b> (usually overnight), batteries <b>BUY & CHARGE</b> cheap electricity. When hot afternoon demand pushes prices <b>above $55</b>, batteries <b>SELL</b> that power back to the grid for profit.
+      </div>
+      <svg id="ercotSvg" viewBox="0 0 650 220" style="width:100%; height:210px; background:#060a06; border:1px solid var(--border); border-radius:6px;"></svg>
+      <div id="ercotExplainBox" style="margin-top:8px; padding:10px; background:#081008; border-left:3px solid var(--green); font-size:12.5px;">
+        Move your mouse over any hour on the chart above to see the exact price per Megawatt-Hour and what our battery system does at that hour.
+      </div>
     </div>
 
     <div class="card">
-      <h3><span>The Enforcer Active Dockets (IP, Contracts & Collections)</span><span>PROTECTING LANCE</span></h3>
+      <div class="card-title">
+        <span>📊 SOLID INTEGRATIONS BUSINESS DIVISIONS (REAL LEDGER)</span>
+        <span style="font-size:11px; color:var(--muted);">Saved on Laptop</span>
+      </div>
       <table>
-        <thead><tr><th>Target / Account</th><th>Enforcement Action</th><th>Dollar Value</th><th>Status</th></tr></thead>
-        <tbody id="enforcerRows"></tbody>
+        <thead>
+          <tr>
+            <th>Business Division</th>
+            <th>Yearly Goal</th>
+            <th>Real Cash Paid</th>
+            <th>Open Bills</th>
+          </tr>
+        </thead>
+        <tbody id="divTable"></tbody>
       </table>
-    </div>
-  </div>
 
-  <div class="card">
-    <h3><span>All 24 Active Agents Working for Solid Integrations (Click "Run Now" on Any Agent)</span><span id="totalRuns">0 Executions</span></h3>
-    <table>
-      <thead><tr><th>#</th><th>Plain-English Agent Name</th><th>What It Does to Make or Protect Money</th><th>Status</th><th>Times Run</th><th>Manual Trigger</th></tr></thead>
-      <tbody id="agentRows"></tbody>
-    </table>
+      <div style="margin-top:14px; padding:10px; background:#070b07; border:1px solid var(--border); border-radius:4px; font-size:12px; line-height:1.5;">
+        <div><b style="color:var(--green);">Department of Energy Contact:</b> Kent Lamparter Hibben (Senior Small Business Advocate) — Watching <b>solid.lp@outlook.com</b> for Microsoft Teams invite.</div>
+        <div style="margin-top:4px;"><b style="color:var(--green);"> Live Data Connections:</b> Coinbase Crypto Prices (Live), U.S. Treasury Interest Rates (Live), City of Dallas Permits (Live), Texas Business Registry (Live).</div>
+      </div>
+    </div>
   </div>
 
 <script>
-let baseEarnedToday = 0;
-let perSecondRate = 3850000 / (365.25 * 86400);
-let lastSyncPerf = performance.now();
+let brainNodes = [];
+let activePulses = [];
+let selectedNodeId = 1;
+let ercotData = [];
+const canvas = document.getElementById('brainCanvas');
+const ctx = canvas.getContext('2d');
 
-function updateLiveMoneyClock() {
-  const now = new Date();
-  const utcMidnight = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
-  const secondsToday = (Date.now() - utcMidnight) / 1000.0;
-  const companyToday = secondsToday * perSecondRate;
-  const lanceToday = companyToday * 0.82;
+function layoutBrainNodes(nodes) {
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  const ring1 = nodes.filter(n => n.id > 0 && n.id <= 10);
+  const ring2 = nodes.filter(n => n.id > 10 && n.id <= 29);
 
-  document.getElementById('liveToday').textContent =
-    '$' + companyToday.toLocaleString('en-US', {minimumFractionDigits: 4, maximumFractionDigits: 4});
-  document.getElementById('liveLanceToday').textContent =
-    '$' + lanceToday.toLocaleString('en-US', {minimumFractionDigits: 4, maximumFractionDigits: 4});
+  nodes.forEach(n => {
+    if (n.id === 0) {
+      n.x = cx;
+      n.y = cy;
+      n.r = 22;
+    } else if (n.id <= 10) {
+      const idx = n.id - 1;
+      const angle = (idx / ring1.length) * Math.PI * 2 - Math.PI / 2;
+      n.x = cx + Math.cos(angle) * 125;
+      n.y = cy + Math.sin(angle) * 105;
+      n.r = 12;
+    } else {
+      const idx = n.id - 11;
+      const angle = (idx / ring2.length) * Math.PI * 2 - Math.PI / 2;
+      n.x = cx + Math.cos(angle) * 265;
+      n.y = cy + Math.sin(angle) * 195;
+      n.r = 10;
+    }
+  });
 }
-setInterval(updateLiveMoneyClock, 100);
 
-async function fetchTelemetry() {
+function getGroupColor(group) {
+  if (group === 'CORE') return '#ffffff';
+  if (group === 'MONEY') return '#00ff66';
+  if (group === 'OPS') return '#00e5ff';
+  return '#ffb700';
+}
+
+function drawBrainNetwork() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  if (!brainNodes.length) {
+    requestAnimationFrame(drawBrainNetwork);
+    return;
+  }
+  const core = brainNodes[0];
+  const now = performance.now();
+
+  // 1. Draw synaptic web connections
+  brainNodes.forEach((n, idx) => {
+    if (n.id === 0) return;
+    ctx.beginPath();
+    ctx.moveTo(core.x, core.y);
+    ctx.lineTo(n.x, n.y);
+    ctx.strokeStyle = 'rgba(0, 255, 102, 0.14)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Connect neighboring ring neurons like a brain cortex
+    const next = brainNodes[(idx % (brainNodes.length - 1)) + 1];
+    if (next) {
+      ctx.beginPath();
+      ctx.moveTo(n.x, n.y);
+      ctx.lineTo(next.x, next.y);
+      ctx.strokeStyle = 'rgba(0, 229, 255, 0.08)';
+      ctx.stroke();
+    }
+  });
+
+  // 2. Draw traveling electrical pulses along neural pathways
+  activePulses.forEach(p => {
+    const target = brainNodes.find(n => n.id === p.to);
+    if (!target) return;
+    const progress = ((now - p.born) % 1400) / 1400;
+    const px = core.x + (target.x - core.x) * progress;
+    const py = core.y + (target.y - core.y) * progress;
+
+    // Highlight active synapse line
+    ctx.beginPath();
+    ctx.moveTo(core.x, core.y);
+    ctx.lineTo(target.x, target.y);
+    ctx.strokeStyle = 'rgba(0, 255, 102, 0.55)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Glowing traveling spark
+    ctx.beginPath();
+    ctx.arc(px, py, 5, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowColor = '#00ff66';
+    ctx.shadowBlur = 12;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  });
+
+  // 3. Draw Neuron Nodes & Plain-English Labels
+  brainNodes.forEach(n => {
+    const col = getGroupColor(n.group);
+    const isSel = n.id === selectedNodeId;
+    const isFiring = activePulses.some(p => p.to === n.id);
+
+    if (isFiring || isSel) {
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r + 7, 0, Math.PI * 2);
+      ctx.fillStyle = isFiring ? 'rgba(0, 255, 102, 0.28)' : 'rgba(255, 255, 255, 0.18)';
+      ctx.fill();
+    }
+
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+    ctx.fillStyle = col;
+    ctx.fill();
+    ctx.lineWidth = isSel ? 3 : 1.5;
+    ctx.strokeStyle = isSel ? '#ffffff' : '#050705';
+    ctx.stroke();
+
+    ctx.fillStyle = '#e8f0e8';
+    ctx.font = n.id === 0 ? 'bold 11px sans-serif' : '600 10.5px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(n.name, n.x, n.y + n.r + 13);
+  });
+
+  requestAnimationFrame(drawBrainNetwork);
+}
+
+canvas.addEventListener('click', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  const mx = (e.clientX - rect.left) * scaleX;
+  const my = (e.clientY - rect.top) * scaleY;
+
+  for (const n of brainNodes) {
+    const dist = Math.hypot(mx - n.x, my - n.y);
+    if (dist <= n.r + 10) {
+      selectNode(n.id);
+      fireSelectedNode();
+      break;
+    }
+  }
+});
+
+function selectNode(id) {
+  selectedNodeId = id;
+  const n = brainNodes.find(x => x.id === id);
+  if (!n) return;
+  document.getElementById('selName').textContent = `${n.name} (Ran ${n.runs} times today)`;
+  document.getElementById('selDesc').textContent = `What it does: ${n.desc}`;
+  document.getElementById('selOut').textContent = `Latest Report: ${n.last_output}`;
+}
+
+async function fireSelectedNode() {
+  const res = await fetch('/api/fire_node', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({id: selectedNodeId})
+  });
+  const data = await res.json();
+  activePulses.push({to: selectedNodeId, born: performance.now()});
+  pullState();
+}
+
+async function fireRandomWave() {
+  for (let i = 1; i <= 6; i++) {
+    const randId = Math.floor(Math.random() * 29) + 1;
+    fetch('/api/fire_node', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({id: randId})
+    });
+  }
+  pullState();
+}
+
+function drawErcotChart(curve) {
+  const svg = document.getElementById('ercotSvg');
+  if (!curve || !curve.length) return;
+  const w = 650, h = 220, padL = 50, padR = 20, padT = 20, padB = 32;
+  const plotW = w - padL - padR;
+  const plotH = h - padT - padB;
+  const maxP = 110;
+
+  const yForPrice = (p) => padT + plotH - (p / maxP) * plotH;
+  const xForIdx = (i) => padL + (i / (curve.length - 1)) * plotW;
+
+  const buyY = yForPrice(30);
+  const sellY = yForPrice(55);
+
+  let html = `
+    <!-- Green Buy Zone below $30 -->
+    <rect x="${padL}" y="${buyY}" width="${plotW}" height="${padT + plotH - buyY}" fill="rgba(0, 255, 102, 0.08)" />
+    <line x1="${padL}" y1="${buyY}" x2="${w - padR}" y2="${buyY}" stroke="#00ff66" stroke-dasharray="4,4" />
+    <text x="${padL + 6}" y="${buyY - 5}" fill="#00ff66" font-size="10" font-weight="bold">BUY / CHARGE ZONE (Under $30/MWh)</text>
+
+    <!-- Amber Sell Zone above $55 -->
+    <rect x="${padL}" y="${padT}" width="${plotW}" height="${sellY - padT}" fill="rgba(255, 183, 0, 0.09)" />
+    <line x1="${padL}" y1="${sellY}" x2="${w - padR}" y2="${sellY}" stroke="#ffb700" stroke-dasharray="4,4" />
+    <text x="${padL + 6}" y="${sellY - 5}" fill="#ffb700" font-size="10" font-weight="bold">SELL FOR PROFIT ZONE (Over $55/MWh)</text>
+  `;
+
+  const pts = curve.map((c, i) => `${xForIdx(i)},${yForPrice(c.price)}`).join(' ');
+  html += `<polyline fill="none" stroke="#00e5ff" stroke-width="3" points="${pts}" />`;
+
+  curve.forEach((c, i) => {
+    const cx = xForIdx(i);
+    const cy = yForPrice(c.price);
+    const dotCol = c.price >= 55 ? '#ffb700' : (c.price <= 30 ? '#00ff66' : '#00e5ff');
+    html += `
+      <circle cx="${cx}" cy="${cy}" r="6" fill="${dotCol}" stroke="#000" stroke-width="1.5" style="cursor:pointer;"
+        onmouseenter="explainErcot(${i})" />
+      <text x="${cx}" y="${h - 10}" fill="#8a998a" font-size="10" text-anchor="middle">${c.hour}</text>
+      <text x="${cx}" y="${cy - 10}" fill="#e8f0e8" font-size="10" text-anchor="middle">$${c.price.toFixed(0)}</text>
+    `;
+  });
+
+  svg.innerHTML = html;
+}
+
+window.explainErcot = function(idx) {
+  const c = ercotData[idx];
+  if (!c) return;
+  const action = c.price >= 55 ? 'SELL POWER TO GRID FOR PROFIT' : (c.price <= 30 ? 'BUY & CHARGE BATTERIES CHEAP' : 'HOLD & WAIT');
+  document.getElementById('ercotExplainBox').innerHTML =
+    `<b>${c.hour} (${c.zone}) — Wholesale Price: $${c.price.toFixed(2)} per Megawatt-Hour</b><br>` +
+    `<span style="color:#00ff66; font-weight:bold;">Action: ${action}</span> — ${c.note}`;
+};
+
+async function submitMoney(kind) {
+  const div = document.getElementById('payDiv').value;
+  const amt = parseFloat(document.getElementById('payAmt').value || '0');
+  if (amt <= 0) return;
+  await fetch('/api/log_real_money', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({division: div, amount: amt, kind: kind})
+  });
+  pullState();
+}
+
+function updateTargetPaceClock() {
+  const now = new Date();
+  const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  const elapsedSec = (Date.now() - startOfDay) / 1000.0;
+  const perSec = 3850000 / (365.25 * 86400);
+  const paceToday = elapsedSec * perSec;
+  document.getElementById('targetTodayClock').textContent =
+    '$' + paceToday.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+}
+setInterval(updateTargetPaceClock, 250);
+
+async function pullState() {
   try {
-    const res = await fetch('/api/telemetry');
+    const res = await fetch('/api/state');
     const data = await res.json();
-    const r = data.revenue;
-    perSecondRate = r.per_second;
 
-    document.getElementById('rateSec').textContent = `$${r.per_second.toFixed(4)} / second`;
-    document.getElementById('rateMin').textContent = `$${r.per_minute.toFixed(2)} / minute ($${r.per_hour.toFixed(2)}/hr)`;
-    document.getElementById('rateHr').textContent = `$${r.per_day.toLocaleString('en-US', {maximumFractionDigits:0})} / day`;
-    document.getElementById('settledYtd').textContent = '$' + r.settled_cash_ytd.toLocaleString('en-US', {minimumFractionDigits:2});
-    document.getElementById('pendingInv').textContent = '+$' + r.pending_invoices.toLocaleString('en-US', {minimumFractionDigits:2}) + ' waiting in open invoices';
+    document.getElementById('realCollected').textContent =
+      '$' + data.money.verified_cash_collected.toLocaleString('en-US', {minimumFractionDigits: 2});
+    document.getElementById('realInvoiced').textContent =
+      '$' + data.money.verified_open_invoices.toLocaleString('en-US', {minimumFractionDigits: 2});
 
-    document.getElementById('streamRows').innerHTML = r.streams.map(s => `
+    if (data.external.btc_usd) {
+      document.getElementById('liveCrypto').textContent =
+        `BTC: $${data.external.btc_usd.toLocaleString()} | DOGE: $${data.external.doge_usd.toFixed(4)}`;
+    }
+    document.getElementById('liveTreasury').textContent = `U.S. Treasury: ${data.external.treasury_rate}`;
+    document.getElementById('laptopBadge').textContent =
+      `MacBook Air: ${data.laptop.battery} (${data.laptop.source})`;
+
+    if (!brainNodes.length) {
+      brainNodes = data.nodes;
+      layoutBrainNodes(brainNodes);
+      selectNode(1);
+    } else {
+      data.nodes.forEach((n, i) => {
+        brainNodes[i].runs = n.runs;
+        brainNodes[i].last_output = n.last_output;
+      });
+      selectNode(selectedNodeId);
+    }
+
+    const nowPerf = performance.now();
+    activePulses = data.pulses.map(p => ({to: p.to, born: nowPerf - 200}));
+
+    document.getElementById('liveFeed').innerHTML = data.logs.map(l => `
+      <div class="feed-item">
+        <span style="color:var(--muted); font-size:11px;">[${l.ts}]</span>
+        <b style="color:var(--green);">${l.agent}:</b> ${l.text}
+      </div>
+    `).join('');
+
+    document.getElementById('divTable').innerHTML = data.money.streams.map(s => `
       <tr>
         <td><b>${s.name}</b></td>
-        <td>$${s.annual.toLocaleString()}</td>
-        <td style="color:#00ff66;">$${s.settled.toLocaleString()}</td>
-        <td style="color:#ffcc00;">$${s.pending.toLocaleString()}</td>
+        <td>$${s.target.toLocaleString()}</td>
+        <td style="color:var(--green); font-weight:bold;">$${s.collected.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
+        <td style="color:var(--amber);">$${s.invoiced.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
       </tr>
     `).join('');
 
-    document.getElementById('enforcerRows').innerHTML = r.enforcer_dockets.map(e => `
-      <tr>
-        <td><b>${e.target}</b></td>
-        <td>${e.action}</td>
-        <td style="color:#00ff66;">$${e.amount.toLocaleString()}</td>
-        <td><b>${e.status}</b></td>
-      </tr>
-    `).join('');
-
-    document.getElementById('mBtc').textContent = data.market.btc_usd ? ('$' + data.market.btc_usd.toLocaleString()) : 'Offline';
-    document.getElementById('mDoge').textContent = data.market.doge_usd ? ('$' + data.market.doge_usd.toFixed(4)) : 'Offline';
-    document.getElementById('mErcot').textContent = data.market.ercot_source;
-    document.getElementById('mSam').textContent = data.market.sam_gov_status;
-    document.getElementById('extSync').textContent = data.market.last_external_sync;
-    document.getElementById('mBatt').textContent = `${data.hardware.battery} (${data.hardware.power_source} - ${data.hardware.state})`;
-    document.getElementById('mGit').textContent = `${data.git.branch} @ ${data.git.commit}`;
-
-    document.getElementById('lastPoll').textContent = `Updated ${new Date().toLocaleTimeString()}`;
-    document.getElementById('busLog').innerHTML = data.logs.map(l =>
-      `<div class="log-line"><span style="color:#849284;">[${l.ts}]</span> <b style="color:#00ff66;">[${l.source}]</b> ${l.msg}</div>`
-    ).join('');
-
-    let total = 0;
-    document.getElementById('agentRows').innerHTML = data.agents.map((a, i) => {
-      total += a.runs;
-      return `<tr>
-        <td>${i+1}</td>
-        <td><b style="color:#00ff66;">${a.label}</b></td>
-        <td>${a.desc}</td>
-        <td>● ${a.status}</td>
-        <td><b>${a.runs}</b></td>
-        <td><button class="btn-action" style="padding:4px 8px;" onclick="runAgent('${a.path}')">Run Now</button></td>
-      </tr>`;
-    }).join('');
-    document.getElementById('totalRuns').textContent = `${total} Total Agent Actions Completed`;
+    if (!ercotData.length && data.ercot_curve) {
+      ercotData = data.ercot_curve;
+      drawErcotChart(ercotData);
+    }
   } catch (e) {}
 }
 
-async function plainAction(actionKey) {
-  const out = document.getElementById('consoleOut');
-  out.textContent = 'Running command now...';
-  const res = await fetch('/api/plain_action', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({action: actionKey})
-  });
-  const data = await res.json();
-  out.textContent = data.output;
-  fetchTelemetry();
-}
-
-async function recordPayment() {
-  const out = document.getElementById('consoleOut');
-  const res = await fetch('/api/plain_action', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({action: 'record_payment', amount: 12500, stream_id: 'DFW_INDUSTRIAL'})
-  });
-  const data = await res.json();
-  out.textContent = data.output;
-  fetchTelemetry();
-}
-
-async function runAgent(path) {
-  const out = document.getElementById('consoleOut');
-  out.textContent = `Running ${path}...`;
-  const res = await fetch('/api/run_agent', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({agent: path})
-  });
-  const data = await res.json();
-  out.textContent = data.output;
-  fetchTelemetry();
-}
-
-async function reloadKeys() {
-  const out = document.getElementById('consoleOut');
-  const res = await fetch('/api/reload_env', { method: 'POST' });
-  const data = await res.json();
-  out.textContent = data.output;
-  fetchTelemetry();
-}
-
-fetchTelemetry();
-setInterval(fetchTelemetry, 3000);
+drawBrainNetwork();
+pullState();
+setInterval(pullState, 2500);
 </script>
 </body>
 </html>
