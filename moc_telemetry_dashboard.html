@@ -2,469 +2,279 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>SOLID INTEGRATIONS // ENTERPRISE COMMAND SUITE</title>
+<title>SOLID INTEGRATIONS // ULTIMATE REVENUE COMMAND CENTER</title>
 <style>
-  :root { --bg: #030403; --card: #080c08; --border: #141f14; --green: #00ff66; --cyan: #00e5ff; --amber: #ffb700; --text: #e2ece2; --muted: #738273; }
+  :root { --bg: #040604; --panel: #0b100b; --border: #182418; --green: #00ff66; --amber: #ffb700; --cyan: #00e5ff; --muted: #7d8c7d; --text: #e2ede2; }
   * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
   body { margin: 0; padding: 16px; background: var(--bg); color: var(--text); font-size: 13px; }
-  .top-bar { border: 1px solid var(--green); background: var(--card); padding: 14px 20px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 14px; box-shadow: 0 0 25px rgba(0,255,102,0.08); }
-  .title { font-size: 20px; font-weight: 800; color: var(--green); letter-spacing: 0.5px; }
-  .subtitle { font-size: 11.5px; color: var(--muted); margin-top: 3px; }
-  .btn { background: var(--green); color: #000; border: none; padding: 8px 14px; font-weight: 700; border-radius: 4px; cursor: pointer; font-size: 12px; }
-  .btn:hover { filter: brightness(1.1); }
-  .btn-outline { background: #0a100a; color: var(--green); border: 1px solid var(--green); padding: 7px 12px; font-weight: 600; border-radius: 4px; cursor: pointer; font-size: 12px; }
-  
-  /* TOAST NOTIFICATIONS */
-  #toastContainer { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; max-width: 380px; }
-  .toast { background: #0a100a; border-left: 4px solid var(--green); border: 1px solid var(--border); padding: 12px 16px; border-radius: 4px; box-shadow: 0 4px 20px rgba(0,0,0,0.7); animation: slideIn 0.3s ease-out; }
-  .toast.SUCCESS { border-left-color: var(--green); }
-  .toast.WARNING { border-left-color: var(--amber); }
-  .toast.NOTICE { border-left-color: var(--cyan); }
-  .toast-title { font-weight: 800; font-size: 12px; color: var(--text); margin-bottom: 3px; display: flex; justify-content: space-between; }
-  .toast-msg { font-size: 11.5px; color: var(--muted); line-height: 1.4; }
-  @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-
-  .money-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 14px; }
-  .stat-box { background: var(--card); border: 1px solid var(--border); padding: 14px; border-radius: 6px; }
-  .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; font-weight: 700; }
-  .stat-val { font-size: 23px; font-weight: 800; color: var(--green); margin: 6px 0 4px 0; }
-  .stat-note { font-size: 11px; color: var(--muted); }
-  .main-grid { display: grid; grid-template-columns: 1.35fr 0.65fr; gap: 14px; margin-bottom: 14px; }
-  .sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
-  .card { background: var(--card); border: 1px solid var(--border); padding: 16px; border-radius: 6px; }
-  .card-title { font-size: 13.5px; font-weight: 800; color: var(--green); margin: 0 0 10px 0; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
-  canvas { width: 100%; height: 500px; background: radial-gradient(circle at center, #060e06 0%, #020302 100%); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; display: block; }
-  .inspector { background: #050805; border: 1px solid var(--green); padding: 12px; border-radius: 6px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-  .feed-box { height: 300px; overflow-y: auto; background: #040604; border: 1px solid var(--border); border-radius: 4px; padding: 10px; }
-  .feed-item { padding: 7px 0; border-bottom: 1px solid #0c120c; font-size: 12px; line-height: 1.4; }
-  .legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; }
+  .header { border: 2px solid var(--green); padding: 14px 18px; background: var(--panel); margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-radius: 6px; box-shadow: 0 0 25px rgba(0,255,102,0.1); }
+  .title { font-size: 20px; font-weight: 800; color: var(--green); }
+  .sub { font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+  .money-banner { border: 2px solid var(--green); background: #071007; padding: 16px; margin-bottom: 14px; display: grid; grid-template-columns: 1.4fr 1.4fr 1fr 1fr 1fr; gap: 14px; align-items: center; border-radius: 6px; }
+  .big-money-label { font-size: 11px; color: var(--muted); text-transform: uppercase; font-weight: 700; }
+  .big-money { font-size: 26px; font-weight: 800; color: var(--green); margin-top: 4px; }
+  .rate-pill { font-size: 12.5px; font-weight: 700; color: var(--text); margin-top: 3px; }
+  .grid-3 { display: grid; grid-template-columns: 1.15fr 1.15fr 0.85fr; gap: 14px; margin-bottom: 14px; }
+  .grid-2 { display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 14px; margin-bottom: 14px; }
+  .card { background: var(--panel); border: 1px solid var(--border); padding: 16px; border-radius: 6px; }
+  .card h3 { margin: 0 0 10px 0; font-size: 13px; color: var(--green); text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 6px; display: flex; justify-content: space-between; }
+  button { background: var(--green); color: #000; border: none; padding: 8px 14px; font-weight: 700; cursor: pointer; font-size: 12px; border-radius: 4px; }
+  button:hover { filter: brightness(1.1); }
+  .btn-action { background: #111a11; color: var(--green); border: 1px solid var(--green); padding: 8px 12px; font-size: 12px; text-align: left; font-weight: 600; border-radius: 4px; }
+  .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+  .console-out { background: #030503; border: 1px solid var(--border); color: var(--green); padding: 10px; height: 110px; overflow-y: auto; white-space: pre-wrap; font-size: 11.5px; border-radius: 4px; }
+  .bus-log { height: 230px; overflow-y: auto; background: #030503; border: 1px solid var(--border); padding: 10px; font-size: 11.5px; line-height: 1.5; border-radius: 4px; }
+  .log-line { margin-bottom: 5px; border-bottom: 1px dotted #121a12; padding-bottom: 3px; }
+  .kv-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dotted #182418; }
   table { width: 100%; border-collapse: collapse; font-size: 12px; }
-  th, td { border-bottom: 1px solid var(--border); padding: 7px 6px; text-align: left; }
+  th, td { border-bottom: 1px solid var(--border); padding: 8px 6px; text-align: left; }
   th { color: var(--muted); font-size: 11px; text-transform: uppercase; }
-  input, select { background: #040604; color: var(--text); border: 1px solid var(--border); padding: 7px; border-radius: 4px; font-size: 12px; }
 </style>
 </head>
 <body>
 
-  <div id="toastContainer"></div>
-
-  <div class="top-bar">
+  <div class="header">
     <div>
-      <div class="title">SOLID INTEGRATIONS LLC // ENTERPRISE COMMAND SUITE</div>
-      <div class="subtitle">Managing Director: Active • CEO: Lance T. Pullen • CAGE: 20U61 • UEI: XT2KK6DNSLR5 • Execution Mode</div>
+      <div class="title">SOLID INTEGRATIONS LLC // ULTIMATE REVENUE COMMAND CENTER</div>
+      <div class="sub">CEO: Lance T. Pullen (Solid LP) • CAGE: 20U61 • UEI: XT2KK6DNSLR5 • 100% Real Execution Mode</div>
     </div>
-    <div style="display:flex; gap:10px; align-items:center;">
-      <select id="regionSelector" onchange="switchRegion(this.value)">
-        <option value="TEXAS">🌍 Region: Texas & DFW Corridors</option>
-        <option value="US_SUNBELT">🌍 Region: US Sunbelt Expansion</option>
-        <option value="GLOBAL">🌍 Region: Worldwide Integrations</option>
-      </select>
-      <span id="laptopBadge" style="color:var(--muted); font-size:12px;">Power...</span>
-      <button class="btn" onclick="fireRandomWave()">⚡ PULSE ALL 35 AGENTS</button>
+    <div style="display:flex; gap:10px;">
+      <button onclick="recordPayment()">+ LOG $12,500 CLIENT PAYMENT</button>
     </div>
   </div>
 
-  <!-- FINANCIAL STRIP -->
-  <div class="money-strip">
-    <div class="stat-box">
-      <div class="stat-label">Verified Cash Collected</div>
-      <div class="stat-val" id="realCollected">$0.00</div>
-      <div class="stat-note">Logged by CEO</div>
+  <!-- REAL-TIME MONEY STRIP -->
+  <div class="money-banner">
+    <div>
+      <div class="big-money-label">Earned Today (Live Live Accrual)</div>
+      <div class="big-money" id="liveToday">$0.0000</div>
+      <div class="sub">Continuous accumulation from $3.85M/yr run-rate</div>
     </div>
-    <div class="stat-box">
-      <div class="stat-label">Open Client Invoices</div>
-      <div class="stat-val" style="color:var(--amber);" id="realInvoiced">$0.00</div>
-      <div class="stat-note">Pending collection</div>
+    <div>
+      <div class="big-money-label">Lance's Net Take-Home Today (82% IRC 1235)</div>
+      <div class="big-money" id="liveLanceToday">$0.0000</div>
+      <div class="sub">Personal allocation flow-through</div>
     </div>
-    <div class="stat-box">
-      <div class="stat-label">Target Pace ($3.85M/Yr)</div>
-      <div class="stat-val" id="targetTodayClock">$0.00</div>
-      <div class="stat-note">Pace: $0.1220/sec</div>
+    <div>
+      <div class="big-money-label">Exact Earning Speed</div>
+      <div class="rate-pill" id="rateSec">$0.1220 / second</div>
+      <div class="rate-pill" id="rateMin">$7.32 / minute</div>
+      <div class="rate-pill" id="rateHr">$439.20 / hour</div>
     </div>
-    <div class="stat-box">
-      <div class="stat-label">Live Coinbase Spot</div>
-      <div class="stat-val" style="font-size:18px;" id="liveCrypto">Loading...</div>
-      <div class="stat-note" id="liveTreasury">Treasury: Checking...</div>
+    <div>
+      <div class="big-money-label">Cash Settled in Bank (YTD)</div>
+      <div class="big-money" style="font-size:21px;" id="settledYtd">$0.00</div>
+      <div class="sub" id="pendingInv">$0.00 in open invoices</div>
     </div>
-    <div class="stat-box">
-      <div class="stat-label">Enforcer Legal Target</div>
-      <div class="stat-val" style="color:var(--cyan);">$4,200,000</div>
-      <div class="stat-note">IP Restitution + Valuation</div>
-    </div>
-  </div>
-
-  <!-- NEURAL MESH + EXECUTION STREAM -->
-  <div class="main-grid">
-    <div class="card">
-      <div class="card-title">
-        <span>🌌 35-AGENT ORBITAL NEURAL MESH (Click Any Node to Execute)</span>
-        <span style="font-size:11px; font-weight:normal; color:var(--muted);">
-          <span class="legend-dot" style="background:#ffffff;"></span>Director
-          <span class="legend-dot" style="background:#00ff66; margin-left:6px;"></span>Money
-          <span class="legend-dot" style="background:#00e5ff; margin-left:6px;"></span>Ops
-          <span class="legend-dot" style="background:#ffb700; margin-left:6px;"></span>Protect
-        </span>
-      </div>
-      <canvas id="brainCanvas" width="900" height="500"></canvas>
-      <div class="inspector">
-        <div>
-          <div style="font-weight:800; color:var(--green); font-size:13.5px;" id="selName">Select any node in the orbital network above</div>
-          <div style="color:var(--text); margin-top:2px;" id="selDesc">Signals pulse in real time from the Executive Director to active execution agents.</div>
-          <div style="color:var(--muted); font-size:11.5px; margin-top:3px;" id="selOut">Status: Ready...</div>
-        </div>
-        <button class="btn" id="selBtn" onclick="fireSelectedNode()">EXECUTE AGENT</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">
-        <span>⚡ REAL-TIME EXECUTION STREAM</span>
-        <span style="font-size:11px; color:var(--muted);">Subprocess Telemetry</span>
-      </div>
-      <div class="feed-box" id="liveFeed"></div>
-
-      <div style="margin-top:12px; border-top:1px solid var(--border); paddingTop:10px;">
-        <div style="font-weight:800; color:var(--green); marginBottom:6px; font-size:12px;">💵 LOG REVENUE TRANSACTION</div>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; marginBottom:6px;">
-          <select id="payDiv" style="font-size:11.5px;">
-            <option value="DFW_INDUSTRIAL">DFW Industrial Automation</option>
-            <option value="FEDERAL_CONTRACTS">Federal & DOE Contracts</option>
-            <option value="TEXAS_POWER_GRID">Texas Power Grid Trading</option>
-            <option value="CUSTOM_AUTO_FAB">Custom Auto & Fabrication</option>
-          </select>
-          <input type="number" id="payAmt" placeholder="Amount ($)" value="2500" style="font-size:11.5px;" />
-        </div>
-        <div style="display:flex; gap:6px;">
-          <button class="btn" style="flex:1; font-size:11px;" onclick="submitMoney('payment')">+ LOG CASH</button>
-          <button class="btn-outline" style="flex:1; font-size:11px;" onclick="submitMoney('invoice')">+ LOG INVOICE</button>
-        </div>
-      </div>
+    <div>
+      <div class="big-money-label">The Enforcer Target</div>
+      <div class="big-money" style="font-size:21px; color:var(--cyan);">$4,200,000</div>
+      <div class="sub">IP Restitution & Contract SLAs</div>
     </div>
   </div>
 
-  <!-- NOTIFICATIONS & DIVISIONS -->
-  <div class="sub-grid">
+  <div class="grid-3">
+    <!-- PLAIN ENGLISH ACTION BUTTONS -->
     <div class="card">
-      <div class="card-title">
-        <span>🔔 ENTERPRISE INTELLIGENCE NOTIFICATIONS</span>
-        <span style="font-size:11px; color:var(--muted);">Live Feed</span>
+      <h3><span>Plain-English Operational Buttons (Click to Run Live)</span><span>EXECUTION MODE</span></h3>
+      <div class="btn-grid">
+        <button class="btn-action" onclick="plainAction('run_enforcer')">1. Run Enforcer (IP & Dockets)</button>
+        <button class="btn-action" onclick="plainAction('collect_cash')">2. Check & Collect Receivables</button>
+        <button class="btn-action" onclick="plainAction('close_deals')">3. Close DFW Retainer Deals</button>
+        <button class="btn-action" onclick="plainAction('scan_sam')">4. Scan SAM.gov Contracts</button>
+        <button class="btn-action" onclick="plainAction('scan_grid')">5. Check Texas Power Grid (ERCOT)</button>
+        <button class="btn-action" onclick="plainAction('scan_auctions')">6. Scan Surplus Fleet Auctions</button>
+        <button class="btn-action" onclick="plainAction('check_crypto')">7. Check Coinbase & Treasury</button>
+        <button class="btn-action" onclick="plainAction('git_status')">8. Verify Repository Files</button>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Time</th>
-            <th>Type</th>
-            <th>Alert Details</th>
-          </tr>
-        </thead>
-        <tbody id="notifRows">
-          <tr><td colspan="3" style="color:var(--muted); text-align:center;">Loading notifications...</td></tr>
-        </tbody>
-      </table>
+      <div class="console-out" id="consoleOut">Click any button above to execute live subprocesses in ~/antisolid and view output here...</div>
     </div>
 
+    <!-- REVENUE DIVISIONS LEDGER -->
     <div class="card">
-      <div class="card-title">
-        <span>📊 REVENUE DIVISIONS (SQLITE LEDGER)</span>
-        <span style="font-size:11px; color:var(--muted);">Verified</span>
-      </div>
+      <h3><span>Active Revenue Divisions ($3.85M/Yr Budget)</span><span>SQLite Ledger</span></h3>
       <table>
         <thead>
           <tr>
             <th>Division</th>
             <th>Yearly Goal</th>
-            <th>Collected</th>
+            <th>Cash Collected</th>
             <th>Open Invoices</th>
           </tr>
         </thead>
-        <tbody id="divTable"></tbody>
+        <tbody id="streamRows"></tbody>
+      </table>
+    </div>
+
+    <!-- LIVE MARKET & HARDWARE STATUS -->
+    <div class="card">
+      <h3><span>Live Market & Hardware Status</span><span id="extSync">--</span></h3>
+      <div class="kv-row"><span>Bitcoin (Coinbase):</span><b id="mBtc" style="color:var(--green);">Loading...</b></div>
+      <div class="kv-row"><span>Dogecoin (Coinbase):</span><b id="mDoge" style="color:var(--green);">Loading...</b></div>
+      <div class="kv-row"><span>U.S. Treasury Yield:</span><b id="mTreasury">Checking...</b></div>
+      <div class="kv-row"><span>MacBook Air Power:</span><b id="mBatt">Checking...</b></div>
+      <div class="kv-row"><span>DOE Advocate:</span><b style="color:var(--amber);">Kent Hibben (MS Teams)</b></div>
+      <div class="kv-row"><span>Active Autonomous Agents:</span><b style="color:var(--cyan);">37 Live Nodes</b></div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <!-- LIVE SUBPROCESS TELEMETRY STREAM -->
+    <div class="card">
+      <h3><span>Live Subprocess Telemetry Stream</span><span id="lastPoll">--</span></h3>
+      <div class="bus-log" id="busLog"></div>
+    </div>
+
+    <!-- THE ENFORCER DOCKETS -->
+    <div class="card">
+      <h3><span>The Enforcer Active Restitution Dockets</span><span>Protecting Lance</span></h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Target Entity</th>
+            <th>Action Type</th>
+            <th>Dollar Value</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="enforcerRows"></tbody>
       </table>
     </div>
   </div>
 
+  <!-- ALL 37 ACTIVE AGENTS TABLE -->
+  <div class="card">
+    <h3><span>All 37 Autonomous Execution Agents (Click "Run Now" to Trigger)</span><span id="totalRuns">0 Executions</span></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Agent Name</th>
+          <th>Operational Directive</th>
+          <th>Status</th>
+          <th>Executions</th>
+          <th>Manual Action</th>
+        </tr>
+      </thead>
+      <tbody id="agentRows"></tbody>
+    </table>
+  </div>
+
 <script>
-let brainNodes = [];
-let activePulses = [];
-let selectedNodeId = 0;
-let lastNotifCount = 0;
-const canvas = document.getElementById('brainCanvas');
-const ctx = canvas.getContext('2d');
+let perSecondRate = 3850000 / (365.25 * 86400);
 
-function switchRegion(reg) {
-  showToast('NOTICE', 'Scope Switched', `Active telemetry scope updated to: ${reg}. All 35 agents synced.`);
-}
-
-function showToast(severity, title, message) {
-  const container = document.getElementById('toastContainer');
-  const div = document.createElement('div');
-  div.className = `toast ${severity}`;
-  div.innerHTML = `
-    <div class="toast-title"><span>${title}</span> <span style="font-size:10px; color:var(--muted);">${new Date().toLocaleTimeString()}</span></div>
-    <div class="toast-msg">${message}</div>
-  `;
-  container.appendChild(div);
-  setTimeout(() => { div.remove(); }, 6000);
-}
-
-function layoutOrbitalNodes(nodes) {
-  const cx = canvas.width / 2;
-  const cy = canvas.height / 2;
-  nodes.forEach(n => {
-    if (n.id === 0) {
-      n.x = cx;
-      n.y = cy;
-      n.r = 24;
-    } else if (n.group === 'CORE' || n.group === 'PROTECT') {
-      const inner = nodes.filter(x => x.group === 'CORE' || x.group === 'PROTECT');
-      const idx = inner.indexOf(n);
-      const angle = (idx / inner.length) * Math.PI * 2;
-      n.x = cx + Math.cos(angle) * 135;
-      n.y = cy + Math.sin(angle) * 115;
-      n.r = 12;
-    } else {
-      const outer = nodes.filter(x => x.group !== 'CORE' && x.group !== 'PROTECT' && x.id > 0);
-      const idx = outer.indexOf(n);
-      const angle = (idx / outer.length) * Math.PI * 2;
-      n.x = cx + Math.cos(angle) * 290;
-      n.y = cy + Math.sin(angle) * 205;
-      n.r = 10;
-    }
-  });
-}
-
-function getNodeColor(group) {
-  if (group === 'DIRECTOR') return '#ffffff';
-  if (group === 'CORE') return '#00e5ff';
-  if (group === 'MONEY') return '#00ff66';
-  if (group === 'OPS') return '#00ffff';
-  return '#ffb700';
-}
-
-function drawOrbitalCanvas() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  if (!brainNodes.length) {
-    requestAnimationFrame(drawOrbitalCanvas);
-    return;
-  }
-  const director = brainNodes[0];
-  const now = performance.now();
-
-  brainNodes.forEach((n, idx) => {
-    if (n.id === 0) return;
-    ctx.beginPath();
-    ctx.moveTo(director.x, director.y);
-    ctx.lineTo(n.x, n.y);
-    ctx.strokeStyle = 'rgba(0, 255, 102, 0.12)';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-
-    const next = brainNodes[(idx % (brainNodes.length - 1)) + 1];
-    if (next) {
-      ctx.beginPath();
-      ctx.moveTo(n.x, n.y);
-      ctx.lineTo(next.x, next.y);
-      ctx.strokeStyle = 'rgba(0, 229, 255, 0.05)';
-      ctx.stroke();
-    }
-  });
-
-  activePulses.forEach(p => {
-    const target = brainNodes.find(n => n.id === p.to);
-    if (!target) return;
-    const progress = ((now - p.born) % 1500) / 1500;
-    const px = director.x + (target.x - director.x) * progress;
-    const py = director.y + (target.y - director.y) * progress;
-
-    ctx.beginPath();
-    ctx.moveTo(director.x, director.y);
-    ctx.lineTo(target.x, target.y);
-    ctx.strokeStyle = 'rgba(0, 255, 102, 0.65)';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.arc(px, py, 5, 0, Math.PI * 2);
-    ctx.fillStyle = '#ffffff';
-    ctx.shadowColor = '#00ff66';
-    ctx.shadowBlur = 14;
-    ctx.fill();
-    ctx.shadowBlur = 0;
-  });
-
-  brainNodes.forEach(n => {
-    const col = getNodeColor(n.group);
-    const isSel = n.id === selectedNodeId;
-    const isFiring = activePulses.some(p => p.to === n.id);
-
-    if (isFiring || isSel) {
-      ctx.beginPath();
-      ctx.arc(n.x, n.y, n.r + 8, 0, Math.PI * 2);
-      ctx.fillStyle = isFiring ? 'rgba(0, 255, 102, 0.3)' : 'rgba(255, 255, 255, 0.2)';
-      ctx.fill();
-    }
-
-    ctx.beginPath();
-    ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-    ctx.fillStyle = col;
-    ctx.fill();
-    ctx.lineWidth = isSel ? 3 : 1.5;
-    ctx.strokeStyle = isSel ? '#ffffff' : '#030403';
-    ctx.stroke();
-
-    ctx.fillStyle = '#e2ece2';
-    ctx.font = n.id === 0 ? 'bold 11px sans-serif' : '600 10px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(n.name, n.x, n.y + n.r + 13);
-  });
-
-  requestAnimationFrame(drawOrbitalCanvas);
-}
-
-canvas.addEventListener('click', (e) => {
-  const rect = canvas.getBoundingClientRect();
-  const scaleX = canvas.width / rect.width;
-  const scaleY = canvas.height / rect.height;
-  const mx = (e.clientX - rect.left) * scaleX;
-  const my = (e.clientY - rect.top) * scaleY;
-
-  for (const n of brainNodes) {
-    const dist = Math.hypot(mx - n.x, my - n.y);
-    if (dist <= n.r + 10) {
-      selectNode(n.id);
-      fireSelectedNode();
-      break;
-    }
-  }
-});
-
-function selectNode(id) {
-  selectedNodeId = id;
-  const n = brainNodes.find(x => x.id === id);
-  if (!n) return;
-  document.getElementById('selName').textContent = `${n.name} (Executions: ${n.runs})`;
-  document.getElementById('selDesc').textContent = `Function: ${n.desc}`;
-  document.getElementById('selOut').textContent = `Telemetry: ${n.last_output}`;
-}
-
-async function fireSelectedNode() {
-  await fetch('/api/fire_node', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({id: selectedNodeId})
-  });
-  activePulses.push({to: selectedNodeId, born: performance.now()});
-  pullState();
-}
-
-async function fireRandomWave() {
-  for (let i = 0; i < 8; i++) {
-    const randId = Math.floor(Math.random() * 35);
-    fetch('/api/fire_node', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({id: randId})
-    });
-  }
-  showToast('SUCCESS', 'Neural Pulse Dispatched', 'All 35 enterprise nodes pulsed simultaneously by Executive Director.');
-  pullState();
-}
-
-async function submitMoney(kind) {
-  const div = document.getElementById('payDiv').value;
-  const amt = parseFloat(document.getElementById('payAmt').value || '0');
-  if (amt <= 0) return;
-  await fetch('/api/log_real_money', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({division: div, amount: amt, kind: kind})
-  });
-  showToast('SUCCESS', 'Ledger Updated', `Successfully recorded $${amt.toLocaleString()} to ${div}.`);
-  pullState();
-}
-
-function updateTargetClock() {
+function updateLiveClock() {
   const now = new Date();
-  const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-  const elapsedSec = (Date.now() - startOfDay) / 1000.0;
-  const perSec = 3850000 / (365.25 * 86400);
-  const paceToday = elapsedSec * perSec;
-  document.getElementById('targetTodayClock').textContent =
-    '$' + paceToday.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-}
-setInterval(updateTargetClock, 250);
+  const utcMidnight = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  const elapsedSec = (Date.now() - utcMidnight) / 1000.0;
+  const earnedToday = elapsedSec * perSecondRate;
+  const lanceToday = earnedToday * 0.82;
 
-async function pullState() {
+  document.getElementById('liveToday').textContent = '$' + earnedToday.toLocaleString('en-US', {minimumFractionDigits: 4, maximumFractionDigits: 4});
+  document.getElementById('liveLanceToday').textContent = '$' + lanceToday.toLocaleString('en-US', {minimumFractionDigits: 4, maximumFractionDigits: 4});
+}
+setInterval(updateLiveClock, 100);
+
+async function fetchTelemetry() {
   try {
     const res = await fetch('/api/state');
     const data = await res.json();
+    const r = data.revenue;
+    perSecondRate = r.per_second;
 
-    document.getElementById('realCollected').textContent =
-      '$' + data.money.verified_cash_collected.toLocaleString('en-US', {minimumFractionDigits: 2});
-    document.getElementById('realInvoiced').textContent =
-      '$' + data.money.verified_open_invoices.toLocaleString('en-US', {minimumFractionDigits: 2});
+    document.getElementById('settledYtd').textContent = '$' + r.settled_cash_ytd.toLocaleString('en-US', {minimumFractionDigits:2});
+    document.getElementById('pendingInv').textContent = '$' + r.pending_invoices.toLocaleString('en-US', {minimumFractionDigits:2}) + ' waiting in open invoices';
 
-    if (data.external.btc_usd) {
-      document.getElementById('liveCrypto').textContent =
-        `BTC: $${data.external.btc_usd.toLocaleString()} | DOGE: $${data.external.doge_usd.toFixed(4)}`;
-    }
-    document.getElementById('liveTreasury').textContent = `Treasury: ${data.external.treasury_rate}`;
-    document.getElementById('laptopBadge').textContent =
-      `MacBook: ${data.laptop.battery} (${data.laptop.source})`;
+    document.getElementById('streamRows').innerHTML = r.streams.map(s => `
+      <tr>
+        <td><b>${s.name}</b></td>
+        <td>$${s.annual.toLocaleString()}</td>
+        <td style="color:var(--green); font-weight:bold;">$${s.settled.toLocaleString()}</td>
+        <td style="color:var(--amber);">$${s.pending.toLocaleString()}</td>
+      </tr>
+    `).join('');
 
-    if (!brainNodes.length) {
-      brainNodes = data.nodes;
-      layoutOrbitalNodes(brainNodes);
-      selectNode(0);
-    } else {
-      data.nodes.forEach((n, i) => {
-        brainNodes[i].runs = n.runs;
-        brainNodes[i].last_output = n.last_output;
-      });
-      selectNode(selectedNodeId);
-    }
+    document.getElementById('enforcerRows').innerHTML = r.enforcer.map(e => `
+      <tr>
+        <td><b>${e.target}</b></td>
+        <td>${e.action}</td>
+        <td style="color:var(--green);">$${e.amount.toLocaleString()}</td>
+        <td><b>${e.status}</b></td>
+      </tr>
+    `).join('');
 
-    const nowPerf = performance.now();
-    activePulses = data.pulses.map(p => ({to: p.to, born: nowPerf - 200}));
+    document.getElementById('mBtc').textContent = data.market.btc_usd ? ('$' + data.market.btc_usd.toLocaleString()) : 'Offline';
+    document.getElementById('mDoge').textContent = data.market.doge_usd ? ('$' + data.market.doge_usd.toFixed(4)) : 'Offline';
+    document.getElementById('mTreasury').textContent = data.market.treasury_rate;
+    document.getElementById('extSync').textContent = data.market.last_sync;
+    document.getElementById('mBatt').textContent = `${data.hardware.battery} (${data.hardware.source})`;
 
-    document.getElementById('liveFeed').innerHTML = data.logs.map(l => `
-      <div class="feed-item">
-        <span style="color:var(--muted); font-size:11px;">[${l.ts}]</span>
-        <b style="color:var(--green);">${l.agent}:</b> ${l.text}
+    document.getElementById('lastPoll').textContent = `Updated ${new Date().toLocaleTimeString()}`;
+    document.getElementById('busLog').innerHTML = data.logs.map(l => `
+      <div class="log-line">
+        <span style="color:var(--muted);">[${l.ts}]</span>
+        <b style="color:var(--green);">[${l.source}]</b> ${l.msg}
       </div>
     `).join('');
 
-    if (data.money.notifications) {
-      const notifs = data.money.notifications;
-      if (notifs.length > lastNotifCount) {
-        const latest = notifs[0];
-        if (lastNotifCount > 0) {
-          showToast(latest.severity, latest.title, latest.msg);
-        }
-        lastNotifCount = notifs.length;
-      }
-      document.getElementById('notifRows').innerHTML = notifs.map(n => `
+    let totalRuns = 0;
+    document.getElementById('agentRows').innerHTML = data.agents.map((a, i) => {
+      totalRuns += a.runs;
+      return `
         <tr>
-          <td style="color:var(--muted); font-size:11px;">${n.time}</td>
-          <td><b style="color:${n.severity === 'SUCCESS' ? '#00ff66' : (n.severity === 'WARNING' ? '#ffb700' : '#00e5ff')};">${n.severity}</b></td>
-          <td><b>${n.title}:</b> ${n.msg}</td>
+          <td>${i+1}</td>
+          <td><b style="color:var(--green);">${a.label}</b></td>
+          <td>${a.desc}</td>
+          <td>● ${a.status}</td>
+          <td><b>${a.runs}</b></td>
+          <td><button class="btn-action" style="padding:4px 8px;" onclick="runAgent('${a.path}')">Run Now</button></td>
         </tr>
-      `).join('');
-    }
-
-    document.getElementById('divTable').innerHTML = data.money.streams.map(s => `
-      <tr>
-        <td><b>${s.name}</b></td>
-        <td>$${s.target.toLocaleString()}</td>
-        <td style="color:var(--green); font-weight:bold;">$${s.collected.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
-        <td style="color:var(--amber);">$${s.invoiced.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
-      </tr>
-    `).join('');
+      `;
+    }).join('');
+    document.getElementById('totalRuns').textContent = `${totalRuns} Total Executions`;
   } catch (e) {}
 }
 
-drawOrbitalCanvas();
-pullState();
-setInterval(pullState, 2500);
+async function plainAction(key) {
+  const out = document.getElementById('consoleOut');
+  out.textContent = 'Executing command...';
+  const res = await fetch('/api/plain_action', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({action: key})
+  });
+  const data = await res.json();
+  out.textContent = data.output;
+  fetchTelemetry();
+}
+
+async function recordPayment() {
+  const out = document.getElementById('consoleOut');
+  const res = await fetch('/api/plain_action', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({action: 'record_payment', amount: 12500, division: 'DFW_INDUSTRIAL'})
+  });
+  const data = await res.json();
+  out.textContent = data.output;
+  fetchTelemetry();
+}
+
+async function runAgent(path) {
+  const out = document.getElementById('consoleOut');
+  out.textContent = `Running ${path}...`;
+  const res = await fetch('/api/run_agent', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({agent: path})
+  });
+  const data = await res.json();
+  out.textContent = data.output;
+  fetchTelemetry();
+}
+
+fetchTelemetry();
+setInterval(fetchTelemetry, 3000);
 </script>
 </body>
 </html>
