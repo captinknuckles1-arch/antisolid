@@ -1,0 +1,15 @@
+{
+  "date": "2026-11-04",
+  "pillar": "tech",
+  "topic": "ERCOT frequency response",
+  "title": "Why Modern AI Crashes Legacy Infrastructure",
+  "full_text": "Your company wants to plug an LLM straight into production. Here is why that is an operational disaster waiting to happen. When an API talks to power grids, municipal transit, or SCADA systems, every single packet must be deterministic. If an AI agent hallucinates an output by 0.1 percent, relays trip, switches lock down, and systems fail. You cannot connect stochastic AI to legacy infrastructure without a deterministic logic firewall. Build deterministic infrastructure that does not break at solid-integrations.polsia.io. Link in bio.",
+  "tags": [
+    "#systemsengineering",
+    "#infrastructure",
+    "#scada",
+    "#devops",
+    "#techtok"
+  ],
+  "website": "https://solid-integrations.polsia.io/"
+}

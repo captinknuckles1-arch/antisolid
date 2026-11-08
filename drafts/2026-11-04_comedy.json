@@ -1,0 +1,15 @@
+{
+  "date": "2026-11-04",
+  "pillar": "comedy",
+  "topic": "Excel Architecture",
+  "title": "When the Client Demands AI in Excel",
+  "full_text": "Tell me you work in enterprise IT without telling me you work in enterprise IT. The client wants autonomous AI agents deployed before Q4. You ask to inspect their tech stack and discover their entire billing engine is an Excel spreadsheet from 2011 running on an OptiPlex under Kevin's desk. Kevin retired in March. The root password is taped to the mousepad. Fix your real architecture at solid-integrations.polsia.io before Kevin's PC dies.",
+  "tags": [
+    "#techhumor",
+    "#programming",
+    "#developer",
+    "#sysadmin",
+    "#softwareengineer"
+  ],
+  "website": "https://solid-integrations.polsia.io/"
+}

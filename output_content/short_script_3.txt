@@ -1,0 +1,11 @@
+TITLE: Why Your Business Website Is Bleeding Cash
+
+HOOK: If your mobile quote form takes 20 seconds to load, you're handing clients to your competitors.
+
+NARRATION:
+Solid Integrations deploys high-speed Next.js edge architecture and automated B2B intake pipelines for commercial businesses in 48 hours flat, backed by a strict 50% deposit. Stop running your business on slow legacy code.
+
+CALL TO ACTION:
+DM or visit antisolid.com to secure your 48-hour sprint.
+
+SIGNATURE: Hash 235021c9
