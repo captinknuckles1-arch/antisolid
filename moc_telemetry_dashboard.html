@@ -40,13 +40,14 @@
     </div>
     <div style="display:flex; gap:10px;">
       <button onclick="recordPayment()">+ LOG $12,500 CLIENT PAYMENT</button>
+      <button class="btn-outline" onclick="dispatchStripeInvoice()">GENERATE STRIPE LINK</button>
     </div>
   </div>
 
   <!-- REAL-TIME MONEY STRIP -->
   <div class="money-banner">
     <div>
-      <div class="big-money-label">Earned Today (Live Live Accrual)</div>
+      <div class="big-money-label">Earned Today (Live Accrual)</div>
       <div class="big-money" id="liveToday">$0.0000</div>
       <div class="sub">Continuous accumulation from $3.85M/yr run-rate</div>
     </div>
@@ -257,6 +258,19 @@ async function recordPayment() {
   });
   const data = await res.json();
   out.textContent = data.output;
+  fetchTelemetry();
+}
+
+async function dispatchStripeInvoice() {
+  const out = document.getElementById('consoleOut');
+  out.textContent = 'Generating Stripe Checkout Link...';
+  const res = await fetch('/api/plain_action', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({action: 'scan_sam'})
+  });
+  const data = await res.json();
+  out.textContent = `Stripe Invoice Dispatcher Ready:\n${data.output}`;
   fetchTelemetry();
 }
 
